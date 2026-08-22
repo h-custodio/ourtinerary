@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import supabase from "@/lib/supabase/client"; // global variable from lib/supabase/client.ts
 
-export default function loginPage() {
+export default function SignupPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
@@ -14,28 +14,28 @@ export default function loginPage() {
         // normal browser behaviour is to reload page
         e.preventDefault();
         
-        setMessage("Logging in...");
+        setMessage("Signing up...");
 
         // uses Supabase API on the initialized client to log in
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signUp({
             email,
             password
         });
 
-        // login handling validation
+        // signup handling validation
         if (error) {
             setMessage(error.message);
-            console.log("error with logging in: ", error.message)
+            console.log("error with signing up: ", error.message );
             return;
         }
 
-        setMessage("Successfully logged in!");
-        console.log("logged in: ", data.user);
+        setMessage("Account created! Check your email to confirm your account.");
+        console.log("Account created:", data.user);
     }
 
     return (
         <div>
-            <h1>Login Page</h1>
+            <h1>Sign up your account!</h1>
 
             <form onSubmit={handleSubmit}>
                 <input 
@@ -55,9 +55,9 @@ export default function loginPage() {
                 />
 
                 <p>{message}</p>
-                <button>Log In</button>
+                <button>Sign Up</button>
                 <br></br>
-                <Link href="/signup">Sign Up</Link>
+                <Link href="/login">Already have an account? Log in</Link>
             </form>
         </div>
     );

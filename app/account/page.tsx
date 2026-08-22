@@ -2,7 +2,7 @@ import supabaseServer from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import LogoutButton from "../components/LogoutButton";
 
-export default async function accountDashboard() {
+export default async function AccountDashboard() {
 
     // variable to be determined by api call
     // deconstruct data to access user
@@ -34,13 +34,7 @@ export default async function accountDashboard() {
 
 NEXT SESSION TODOS:
 
-GIT
-1) Set up Git repo
-2) Check .gitignore / make sure secrets aren't committed
-3) Initial commit
-
 AUTH
-4) Set up SIGN UP
 5) Test complete auth flow
 
 DATABASE
