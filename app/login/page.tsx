@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import supabase from "@/lib/supabase/client"; // global variable from lib/supabase/client.ts
 
-export default function loginPage() {
+export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
