@@ -34,17 +34,27 @@ export default async function AccountDashboard() {
 
 NEXT SESSION TODOS:
 
-AUTH
-5) Test complete auth flow
-
 DATABASE
-6) Design the initial DB schema
-7) Create tables in Supabase
-8) Decide whether we actually need an ORM
+8) Connect Next.js → Supabase
+   - Set up a simple place/pattern for DB queries
+   - Learn + configure basic RLS
+   - Finish profile creation/retrieval
 
 FEATURES
-9) Build the core "social" functionality
-10) Tooling / Pre-PR run check
-11) CI / CD / Testing
+9) Build core "social" functionality
+   - Implement features one at a time
+   - Handle basic validation + errors
+
+QUALITY
+10) Pre-PR check
+   - Typecheck / lint / test / build
+   - Clean up obvious issues
+
+11) CI/CD
+   - Set up basic CI
+   - Deploy and verify production
+
+LATER
+12) Revisit architecture/ORM only if needed
 
 */
