@@ -1,6 +1,6 @@
 import supabaseServer from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import LogoutButton from "../components/LogoutButton";
+import LogoutButton from "../../components/LogoutButton";
 
 export default async function AccountDashboard() {
 
@@ -36,8 +36,6 @@ NEXT SESSION TODOS:
 
 DATABASE
 8) Connect Next.js → Supabase
-   - Set up a simple place/pattern for DB queries
-   - Learn + configure basic RLS
    - Finish profile creation/retrieval
 
 FEATURES

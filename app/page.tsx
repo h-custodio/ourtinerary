@@ -1,40 +1,99 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import Plan from "@/components/Plan";
+import CreatePlan from "@/components/plan/CreatePlan";
+import AddPlanModal from "@/components/plan/AddPlanModal";
+import EditPlanModal from "@/components/plan/EditPlanModal";
+import { PlanData } from "@/component_types/plan";
+
+interface PlanFullData {
+  id: string;
+  planData: PlanData;
+}
+
+type PlanMap = Record<string, PlanFullData>;
 
 export default function Home() {
-  const [message, setMessage] = useState("Testing Supabase...");
-  const [result, setResult] = useState("");
+  const [planList, setPlanList] = useState<PlanMap>({});
+  const [isAddPlanOpen, setIsAddPlanOpen] = useState(false);
+  const [isEditPlanOpen, setIsEditPlanOpen] = useState(false);
+  const [prevPlan, setPrevPlan] = useState<PlanFullData>({
+    id: "",
+    planData: { title: "", description: "", date: new Date() },
+  });
 
-  useEffect(() => {
-    async function testConnection() {
-      const supabase = createClient();
+  // Adds a Plan
+  const addPlan = (planData: PlanData) => {
+    const id = crypto.randomUUID();
+    const newPlan: PlanFullData = {
+      id,
+      planData,
+    };
 
-      // query the database
-      const { data , error } = await supabase
-        .from("profile")
-        .select("*")
-        .limit(1)
+    setPlanList((prevPlan) => ({ ...prevPlan, [id]: newPlan }));
+  };
 
-      if (error) {
-        setMessage(`Supabase responded: ${error.message}`);
-      } else if (data.length > 0) {
-        setMessage("Supabase connection works!");
-        setResult(data[0].display_name);
-      } else {
-        setMessage("Connected, but no rows were found. Check RLS.");
-      }
-    }
+  // Removes a Plan given an id
+  const removePlan = (idToRemove: string) => {
+    setPlanList((prevPlan) => {
+      const copy = { ...prevPlan };
+      delete copy[idToRemove];
+      return copy;
+    });
+  };
 
-    testConnection();
-  }, []);
+  const updatePlan = (idToUpdate: string, newPlanData: PlanData) => {
+    setPlanList((prevPlan) => ({
+      ...prevPlan,
+      [idToUpdate]: {
+        ...prevPlan[idToUpdate],
+        planData: newPlanData,
+      },
+    }));
+  };
 
   return (
-    <main>
-      <h1>Supabase Test</h1>
-      <p>{message}</p>
-      <p>{result}</p>
-    </main>
+    <article style={{ width: "fit-content" }}>
+      {isAddPlanOpen === true && (
+        <div>
+          <AddPlanModal
+            isOpen={isAddPlanOpen}
+            onClose={() => setIsAddPlanOpen(false)}
+            onSubmitInputs={addPlan}
+          />
+        </div>
+      )}
+      {isEditPlanOpen === true && (
+        <div>
+          <EditPlanModal
+            id={prevPlan.id}
+            prevPlanData={prevPlan.planData}
+            isOpen={isEditPlanOpen}
+            onClose={() => setIsEditPlanOpen(false)}
+            onSubmitInputs={updatePlan}
+          />
+        </div>
+      )}
+      <div className="d-flex flex-wrap gap-3 mb-2">
+        {Object.values(planList).length === 0 && <h4>No Plans Created</h4>}
+        {Object.values(planList).map((plan) => (
+          <div key={plan.id}>
+            <Plan
+              plan={plan.planData}
+              onClose={() => removePlan(plan.id)}
+              openEdit={() => {
+                setPrevPlan(plan);
+                setIsEditPlanOpen(true);
+              }}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="d-flex justify-content-start">
+        <CreatePlan onClick={() => setIsAddPlanOpen(true)} />
+      </div>
+    </article>
   );
 }
