@@ -1,4 +1,4 @@
-import {Address} from "@/types/address"
+import {Address} from "@/component_types/address"
 
 export interface ActivityData {
   title: string;
