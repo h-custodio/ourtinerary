@@ -42,3 +42,5 @@ next-env.d.ts
 
 #device
 .DS_Store
+
+lib/supabase/supabase/.temp/

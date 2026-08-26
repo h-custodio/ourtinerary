@@ -3,6 +3,10 @@ import { useState, useEffect, SubmitEvent, KeyboardEvent } from "react";
 import { PlanData } from "@/component_types/plan";
 import { formatDateToInput, parseInputToDate } from "@/utils/dateUtils";
 
+interface EditPlanProps {
+  onClick: () => void;
+}
+
 interface EditPlanModalProps {
   id: string;
   prevPlanData: PlanData;
@@ -10,6 +14,18 @@ interface EditPlanModalProps {
   onClose: () => void;
   onSubmitInputs: (id: string, inputs: PlanData) => void;
 }
+
+export const EditPlanButton = ({ onClick }: EditPlanProps) => {
+  return (
+    <button
+      type="button"
+      className="btn btn-secondary btn-sm"
+      onClick={onClick}
+    >
+      Edit Plan
+    </button>
+  );
+};
 
 const EditPlanModal = ({
   id,

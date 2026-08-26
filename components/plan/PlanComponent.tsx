@@ -1,13 +1,15 @@
 "use client";
+
 import { useState } from "react";
 
-import Activity from "./Activity";
-import AddActivity from "./activity/AddActivity";
-import EditPlan from "./plan/EditPlan";
-import AddActivityModal from "./activity/AddActivityModal";
-import EditActivityModal from "./activity/EditActivityModal";
+import Activity from "../activity/ActivityComponent";
+import AddActivity from "../activity/AddActivityButton";
+import EditPlan from "./EditPlanButton";
+import AddActivityModal from "../activity/AddActivityButton";
+import EditActivityModal from "../activity/EditActivityButton";
 import { ActivityData } from "@/component_types/activity";
 import { PlanData } from "@/component_types/plan";
+import { useActivity } from "@/components/activity/useActivity";
 
 interface PlanProps {
   plan: PlanData;
@@ -15,63 +17,31 @@ interface PlanProps {
   openEdit: () => void;
 }
 
-interface ActivityFullData {
-  id: string;
-  activityData: ActivityData;
-}
+const PlanComponent = ({ plan, onClose, openEdit }: PlanProps) => {
+  const {
+    activities,
+    createActivity,
+    updateActivity,
+    deleteActivity,
+  } = useActivity(plan.plan_id);
 
-type ActivityMap = Record<string, ActivityFullData>;
-
-const Plan = ({ plan, onClose, openEdit }: PlanProps) => {
-  const [activityList, setActivityList] = useState<ActivityMap>({});
   const [isAddActivityOpen, setIsAddActivityOpen] = useState(false);
   const [isEditActivityOpen, setIsEditActivityOpen] = useState(false);
-  const [prevActivity, setPrevActivity] = useState<ActivityFullData>({
-    id: "",
+  const [prevActivity, setPrevActivity] = useState<ActivityData>({
     activityData: {
       title: "",
       description: "",
       startTime: "",
       endTime: "",
-      address: { street: "", city: "", province: "", zipCode: "", country: "" },
+      address: {
+        street: "",
+        city: "",
+        province: "",
+        zipCode: "",
+        country: "",
+      },
     },
   });
-
-  // Adds an Activity
-  const addActivity = (activityData: ActivityData) => {
-    const id = crypto.randomUUID();
-    const newActivity: ActivityFullData = {
-      id,
-      activityData,
-    };
-
-    setActivityList((prevActivity) => ({
-      ...prevActivity,
-      [id]: newActivity,
-    }));
-  };
-
-  // Removes an Activity given an id
-  const removeActivity = (idToRemove: string) => {
-    setActivityList((prevActivity) => {
-      const copy = { ...prevActivity };
-      delete copy[idToRemove];
-      return copy;
-    });
-  };
-
-  const updateActivity = (
-    idToUpdate: string,
-    newActivityData: ActivityData,
-  ) => {
-    setActivityList((prevActivity) => ({
-      ...prevActivity,
-      [idToUpdate]: {
-        ...prevActivity[idToUpdate],
-        activityData: newActivityData,
-      },
-    }));
-  };
 
   return (
     <article>
@@ -80,7 +50,7 @@ const Plan = ({ plan, onClose, openEdit }: PlanProps) => {
           <AddActivityModal
             isOpen={isAddActivityOpen}
             onClose={() => setIsAddActivityOpen(false)}
-            onSubmitInputs={addActivity}
+            onSubmitInputs={createActivity}
           />
         </div>
       )}
@@ -140,4 +110,4 @@ const Plan = ({ plan, onClose, openEdit }: PlanProps) => {
   );
 };
 
-export default Plan;
+export default PlanComponent;

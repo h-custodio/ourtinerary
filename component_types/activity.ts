@@ -1,4 +1,5 @@
 import {Address} from "@/component_types/address"
+import { Database } from "@/lib/supabase/database.types";
 
 export interface ActivityData {
   title: string;
@@ -7,3 +8,5 @@ export interface ActivityData {
   endTime: string;
   address: Address;
 }
+
+export type Activity = Database["public"]["Tables"]["activity"]["Row"];

@@ -1,6 +1,6 @@
 import { ActivityData } from "@/component_types/activity";
 import { Address } from "@/component_types/address";
-import EditActivity from "./activity/EditActivity";
+import { EditActivityButton } from "./EditActivityButton";
 
 interface ActivityProps {
   activity: ActivityData;
@@ -8,11 +8,11 @@ interface ActivityProps {
   openEdit: () => void;
 }
 
-const Activity = ({ activity, onClose, openEdit }: ActivityProps) => {
+const ActivityComponent = ({ activity, onClose, openEdit }: ActivityProps) => {
   return (
     <div className="d-inline-block border position-relative p-3">
       <div className="position-absolute top-0 end-8 m-2">
-        <EditActivity onClick={openEdit} />
+        <EditActivityButton onClick={openEdit} />
       </div>
       <button
         type="button"
@@ -38,4 +38,4 @@ const Activity = ({ activity, onClose, openEdit }: ActivityProps) => {
   );
 };
 
-export default Activity;
+export default ActivityComponent;
