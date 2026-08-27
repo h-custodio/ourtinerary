@@ -4,18 +4,18 @@ import { useState, SubmitEvent, KeyboardEvent } from "react";
 import { ActivityData } from "@/component_types/activity";
 import { Address } from "@/component_types/address";
 import { parseAddress } from "@/utils/addressUtils";
+import { useActivity } from "@/components/activity/useActivity";
 
 interface AddActivityModalProps {
   isOpen: Boolean;
   onClose: () => void;
-  onSubmitInputs: (inputs: ActivityData) => void;
 }
 
 interface AddActivityProps {
   onClick: () => void;
 }
 
-const AddActivityButton = ({ onClick }: AddActivityProps) => {
+export const AddActivityButton = ({ onClick }: AddActivityProps) => {
   return (
     <button type="button" className="btn btn-primary" onClick={onClick}>
       Add Activity
@@ -23,12 +23,12 @@ const AddActivityButton = ({ onClick }: AddActivityProps) => {
   );
 };
 
-const AddActivityModal = ({
-  isOpen,
-  onClose,
-  onSubmitInputs,
-}: AddActivityModalProps) => {
+const AddActivityModal = ({ isOpen, onClose }: AddActivityModalProps) => {
   if (!isOpen) return null;
+
+  const { activities, loading, error, createActivity } = useActivity(
+    planToPass.plan_id,
+  );
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -50,7 +50,7 @@ const AddActivityModal = ({
       description.trim() === "" ? "No Description" : description;
     const finalAddress: Address = parseAddress(address);
 
-    onSubmitInputs({
+    createActivity({
       title: finalTitle,
       description: finalDescription,
       startTime,

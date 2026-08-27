@@ -2,6 +2,7 @@
 import { useState, useEffect, SubmitEvent, KeyboardEvent } from "react";
 import { PlanData } from "@/component_types/plan";
 import { formatDateToInput, parseInputToDate } from "@/utils/dateUtils";
+import usePlan from "@/components/plan/usePlan";
 
 interface EditPlanProps {
   onClick: () => void;
@@ -12,7 +13,6 @@ interface EditPlanModalProps {
   prevPlanData: PlanData;
   isOpen: Boolean;
   onClose: () => void;
-  onSubmitInputs: (id: string, inputs: PlanData) => void;
 }
 
 export const EditPlanButton = ({ onClick }: EditPlanProps) => {
@@ -32,17 +32,21 @@ const EditPlanModal = ({
   prevPlanData,
   isOpen,
   onClose,
-  onSubmitInputs,
 }: EditPlanModalProps) => {
   if (!isOpen) return null;
 
+  const { loading, error, updatePlan } = usePlan();
+
   const [title, setTitle] = useState(prevPlanData.title);
-  const [description, setDescription] = useState(prevPlanData.description);
+  const [prevDescription, setPrevDescription] = useState(
+    prevPlanData.description,
+  );
+  const [descriptionInput, setDescriptionInput] = useState("");
   const [date, setDate] = useState(formatDateToInput(prevPlanData.date));
 
   useEffect(() => {
     setTitle(prevPlanData.title);
-    setDescription(prevPlanData.description);
+    setPrevDescription(prevPlanData.description);
     if (prevPlanData.date) {
       setDate(formatDateToInput(prevPlanData.date));
     }
@@ -55,8 +59,9 @@ const EditPlanModal = ({
     // Sets a default value if no Title or Description is inputted
     const finalTitle = title.trim() === "" ? prevPlanData.title : title;
     const finalDescription =
-      description.trim() === "" ? prevPlanData.description : description;
-    onSubmitInputs(id, {
+      descriptionInput.trim() === "" ? prevDescription : descriptionInput;
+
+    updatePlan(id, {
       title: finalTitle,
       description: finalDescription,
       date: parseInputToDate(date),
@@ -118,8 +123,8 @@ const EditPlanModal = ({
                   type="text"
                   className="form-control"
                   placeholder="Plan description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={descriptionInput}
+                  onChange={(e) => setDescriptionInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
               </div>

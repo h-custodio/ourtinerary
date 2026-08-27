@@ -10,25 +10,28 @@ import EditActivityModal from "../activity/EditActivityButton";
 import { ActivityData } from "@/component_types/activity";
 import { PlanData } from "@/component_types/plan";
 import { useActivity } from "@/components/activity/useActivity";
+import { parseAddress } from "@/utils/addressUtils";
+import usePlan from "@/components/plan/usePlan";
 
 interface PlanProps {
-  plan: PlanData;
-  onClose: () => void;
+  planToPass: PlanData;
   openEdit: () => void;
 }
 
-const PlanComponent = ({ plan, onClose, openEdit }: PlanProps) => {
-  const {
-    activities,
-    createActivity,
-    updateActivity,
-    deleteActivity,
-  } = useActivity(plan.plan_id);
+const PlanComponent = ({ planToPass, openEdit }: PlanProps) => {
+  const { activities, loading, error, updateActivity } = useActivity(
+    planToPass.plan_id,
+  );
+
+  const { planLoad, planErr, deletePlan } = usePlan();
 
   const [isAddActivityOpen, setIsAddActivityOpen] = useState(false);
   const [isEditActivityOpen, setIsEditActivityOpen] = useState(false);
   const [prevActivity, setPrevActivity] = useState<ActivityData>({
-    activityData: {
+    // ==============
+    // ID NEEDED HERE
+    // ==============
+    activity_id: {
       title: "",
       description: "",
       startTime: "",
@@ -50,18 +53,20 @@ const PlanComponent = ({ plan, onClose, openEdit }: PlanProps) => {
           <AddActivityModal
             isOpen={isAddActivityOpen}
             onClose={() => setIsAddActivityOpen(false)}
-            onSubmitInputs={createActivity}
           />
         </div>
       )}
       {isEditActivityOpen === true && (
         <div>
           <EditActivityModal
+            // ==============
+            // ID NEEDED HERE
+            // ==============
             id={prevActivity.id}
-            prevActivityData={prevActivity.activityData}
+            prevActivityData={prevActivity}
             isOpen={isEditActivityOpen}
             onClose={() => setIsEditActivityOpen(false)}
-            onSubmitInputs={updateActivity}
+            onSubmitInputs={updateActivity(prevActivity.id)}
           />
         </div>
       )}
@@ -70,28 +75,36 @@ const PlanComponent = ({ plan, onClose, openEdit }: PlanProps) => {
           type="button"
           className="btn-close position-absolute top-0 end-0 m-2"
           aria-label="Remove Plan"
-          onClick={() => onClose()}
+          // ==============
+          // ID NEEDED HERE
+          // ==============
+          onClick={deletePlan(plan_id)}
         />
-        <h4 className="m-0">{plan.title}</h4>
+        <h4 className="m-0">{planToPass.title}</h4>
         <p className="mb-2 m-0">
-          {plan.date.getMonth() +
+          {planToPass.date.getMonth() +
             1 +
             "/" +
-            plan.date.getDate() +
+            planToPass.date.getDate() +
             "/" +
-            plan.date.getFullYear()}
+            planToPass.date.getFullYear()}
         </p>
-        <p className="mb-2">{plan.description}</p>
-        {Object.keys(activityList).length === 0 && (
-          <p className="mb-2">No Activities Added</p>
-        )}
+        <p className="mb-2">{planToPass.description}</p>
+        {activities.length === 0 && <p className="mb-2">No Activities Added</p>}
         <div className="d-inline-block">
           <div className="d-flex flex-wrap gap-3 mb-2">
-            {Object.values(activityList).map((activity) => (
+            {activities.map((activity) => (
+              // ==============
+              // ID NEEDED HERE
+              // ==============
               <div key={activity.id}>
                 <Activity
-                  activity={activity.activityData}
-                  onClose={() => removeActivity(activity.id)}
+                  activityToPass={{
+                    ...activity,
+                    startTime: activity.start_time,
+                    endTime: activity.end_time,
+                    address: parseAddress(activity.location),
+                  }}
                   openEdit={() => {
                     setPrevActivity(activity);
                     setIsEditActivityOpen(true);

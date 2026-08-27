@@ -2,6 +2,7 @@
 import { useState, SubmitEvent, KeyboardEvent } from "react";
 import { PlanData } from "@/component_types/plan";
 import { formatDateToInput, parseInputToDate } from "@/utils/dateUtils";
+import usePlan from "@/components/plan/usePlan";
 
 interface AddPlanProps {
   onClick: () => void;
@@ -18,11 +19,12 @@ export const AddPlanButton = ({ onClick }: AddPlanProps) => {
 interface AddPlanModalProps {
   isOpen: Boolean;
   onClose: () => void;
-  onSubmitInputs: (inputs: PlanData) => void;
 }
 
-const AddPlanModal = ({ isOpen, onClose, onSubmitInputs,}: AddPlanModalProps) => {
+const AddPlanModal = ({ isOpen, onClose }: AddPlanModalProps) => {
   if (!isOpen) return null;
+
+  const { loading, error, createPlan } = usePlan();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -36,7 +38,8 @@ const AddPlanModal = ({ isOpen, onClose, onSubmitInputs,}: AddPlanModalProps) =>
     const finalTitle = title.trim() === "" ? "New Plan" : title;
     const finalDescription =
       description.trim() === "" ? "No Description" : description;
-    onSubmitInputs({
+
+    createPlan({
       title: finalTitle,
       description: finalDescription,
       date: parseInputToDate(date),

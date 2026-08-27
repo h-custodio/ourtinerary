@@ -3,7 +3,7 @@ import { Database } from "@/lib/supabase/database.types";
 // application/UI model for user input
 export interface PlanData {
   title: string;
-  description: string;
+  description: string | null;
   date: Date;
 }
 

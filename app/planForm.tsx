@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Plan from "@/components/plan/PlanComponent";
 import AddPlanModal, { AddPlanButton } from "@/components/plan/AddPlanButton";
+import usePlan from "@/components/plan/usePlan";
 import EditPlanModal from "@/components/plan/EditPlanButton";
 
 // ============================================================
@@ -18,14 +19,7 @@ import EditPlanModal from "@/components/plan/EditPlanButton";
 // ============================================================
 
 export default function Home() {
-  const {
-    plans,
-    loading,
-    error,
-    createPlan,
-    updatePlan,
-    deletePlan,
-  } = usePlan();
+  const { plans, loading, error, deletePlan } = usePlan();
 
   const [isAddPlanOpen, setIsAddPlanOpen] = useState(false);
   const [isEditPlanOpen, setIsEditPlanOpen] = useState(false);
@@ -38,28 +32,31 @@ export default function Home() {
           <AddPlanModal
             isOpen={isAddPlanOpen}
             onClose={() => setIsAddPlanOpen(false)}
-            onSubmitInputs={addPlan}
           />
         </div>
       )}
       {isEditPlanOpen === true && (
         <div>
           <EditPlanModal
-            id={selectedPlan.id}
-            selectedPlanData={selectedPlan.planData}
+            // ==============
+            // ID NEEDED HERE
+            // ==============
+            id={selectedPlanID.id}
+            selectedPlanData={plans[selectedPlanID].planData}
             isOpen={isEditPlanOpen}
             onClose={() => setIsEditPlanOpen(false)}
-            onSubmitInputs={updatePlan}
           />
         </div>
       )}
       <div className="d-flex flex-wrap gap-3 mb-2">
-        {Object.values(planList).length === 0 && <h4>No Plans Created</h4>}
-        {Object.values(planList).map((plan) => (
+        {plans.length === 0 && <p className="mb-2">No Plans Found</p>}
+        {plans.map((plan) => (
+          // ==============
+          // ID NEEDED HERE
+          // ==============
           <div key={plan.id}>
             <Plan
-              plan={plan.planData}
-              onClose={() => deletePlan(plan.id)}
+              planToPass={{ ...plan, date: new Date(plan.date) }}
               openEdit={() => {
                 setselectedPlanID(plan.id);
                 setIsEditPlanOpen(true);
