@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Plan from "@/components/plan/PlanComponent";
 import AddPlanModal, { AddPlanButton } from "@/components/plan/AddPlanButton";
-import usePlan from "@/components/plan/usePlan";
+import usePlan from "@/hooks/usePlans";
 import EditPlanModal from "@/components/plan/EditPlanButton";
 
 // ============================================================

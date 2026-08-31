@@ -4,7 +4,7 @@ import { useState, SubmitEvent, KeyboardEvent } from "react";
 import { ActivityData } from "@/component_types/activity";
 import { Address } from "@/component_types/address";
 import { parseAddress } from "@/utils/addressUtils";
-import { useActivity } from "@/components/activity/useActivity";
+import { useActivity } from "@/hooks/useActivities";
 
 interface AddActivityModalProps {
   isOpen: Boolean;

@@ -1,4 +1,4 @@
-import { ActivityData } from "@/component_types/activity";
+import { ActivityData } from "@/types/activity";
 import { EditActivityButton } from "./EditActivityButton";
 
 interface ActivityProps {

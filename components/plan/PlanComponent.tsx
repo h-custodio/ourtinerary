@@ -1,29 +1,29 @@
 "use client";
 
+import { redirect } from "next/navigation";
 import { useState } from "react";
+
+import supabase from "@/lib/supabase/client";
+import { ActivityData } from "@/component_types/activity";
+import { PlanData } from "@/component_types/plan";
+import { useActivity } from "@/hooks/useActivities";
+import { parseAddress } from "@/utils/addressUtils";
 
 import Activity from "../activity/ActivityComponent";
 import AddActivity from "../activity/AddActivityButton";
-import EditPlan from "./EditPlanButton";
-import AddActivityModal from "../activity/AddActivityButton";
 import EditActivityModal from "../activity/EditActivityButton";
-import { ActivityData } from "@/component_types/activity";
-import { PlanData } from "@/component_types/plan";
-import { useActivity } from "@/components/activity/useActivity";
-import { parseAddress } from "@/utils/addressUtils";
-import usePlan from "@/components/plan/usePlan";
+import EditPlan from "./EditPlanButton";
 
 interface PlanProps {
   planToPass: PlanData;
   openEdit: () => void;
 }
 
-const PlanComponent = ({ planToPass, openEdit }: PlanProps) => {
-  const { activities, loading, error, updateActivity } = useActivity(
-    planToPass.plan_id,
-  );
+// TODO: find a way to get the current plan's ID since usePlan has only an array
 
-  const { planLoad, planErr, deletePlan } = usePlan();
+const PlanComponent = ({ planToPass, openEdit }: PlanProps) => {
+  const { activities, loading, error, updateActivity } = useActivity(.plan_id);
+
 
   const [isAddActivityOpen, setIsAddActivityOpen] = useState(false);
   const [isEditActivityOpen, setIsEditActivityOpen] = useState(false);
@@ -45,6 +45,24 @@ const PlanComponent = ({ planToPass, openEdit }: PlanProps) => {
       },
     },
   });
+
+  async function getUserID() {
+
+    const { data: {user}, error } = await supabase.auth.getUser();
+
+    if (error) {
+        console.error("Failed to get user:", error);
+        return;
+    }
+
+    // No authenticated user
+    if (!user) {
+      console.log("user not authenticated, no access");
+      redirect("/login");
+    }
+
+    return user.id;
+  }
 
   return (
     <article>
@@ -78,7 +96,7 @@ const PlanComponent = ({ planToPass, openEdit }: PlanProps) => {
           // ==============
           // ID NEEDED HERE
           // ==============
-          onClick={deletePlan(plan_id)}
+          onClick={deletePlan(plan_id)} // MOVE THIS OUTSIDE WITH PLANFORM
         />
         <h4 className="m-0">{planToPass.title}</h4>
         <p className="mb-2 m-0">
