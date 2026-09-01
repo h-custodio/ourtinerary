@@ -18,7 +18,7 @@ import EditPlanModal from "@/components/plan/EditPlanButton";
 // NOTICE FOR DB UPDATES
 // ============================================================
 
-export default function Home() {
+export function Home() {
   const { plans, loading, error, deletePlan } = usePlan();
 
   const [isAddPlanOpen, setIsAddPlanOpen] = useState(false);

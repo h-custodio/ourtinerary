@@ -3,8 +3,8 @@
 import { useState } from "react"
 import supabase from "@/lib/supabase/client";
 import { redirect } from "next/navigation";
-import LogoutButton from "@/components/LogoutButton";
 import { Plan } from "@/types/plan"
+import { PlanForm } from "@/components/plan/PlanForm";
 
 export default async function AccountDashboard() {
     const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
@@ -26,6 +26,7 @@ export default async function AccountDashboard() {
     return (
         <div>
             <h1>Welcome</h1>
+            <PlanForm></PlanForm>
         </div>
     );
 }

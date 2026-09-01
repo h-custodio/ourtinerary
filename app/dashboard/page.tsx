@@ -5,38 +5,39 @@ import supabase from "@/lib/supabase/client";
 import { redirect } from "next/navigation";
 import LogoutButton from "@/components/LogoutButton";
 import { Plan } from "@/types/plan"
+import { PlanForm } from "@/components/plan/PlanForm";
 
-export default async function AccountDashboard() {
+export default function AccountDashboard() {
     const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
 
-    // verify that user is authenticated
-    const { data: {user}, error } = await supabase.auth.getUser();
+    // // verify that user is authenticated
+    // const { data: {user}, error } = await supabase.auth.getUser();
 
-    if (error) {
-        console.error("Failed to get user:", error);
-        return;
-    }
+    // if (error) {
+    //     console.error("Failed to get user:", error);
+    //     return;
+    // }
 
-    // No authenticated user
-    if (!user) {
-        console.log("user not authenticated, no access");
-        redirect("/login");
-    }
+    // // No authenticated user
+    // if (!user) {
+    //     console.log("user not authenticated, no access");
+    //     redirect("/login");
+    // }
 
     return (
         <div>
             <h1>Welcome</h1>
 
-            <p>Logged in as: {user.email}</p>
+            {/* <p>Logged in as: {user.email}</p> */}
 
-            <LogoutButton></LogoutButton>
+            
 
 
 
             <>
             {/* your plans */}
 
-            {plans.map((plan) => (
+            {/* {plans.map((plan) => (
             <PlanCard
                 key={plan.id}
                 plan={plan}
@@ -50,7 +51,12 @@ export default async function AccountDashboard() {
                 onOpenChange={(open) => {
                     if (!open) setEditingPlan(null);
             }}
-            />
+            /> */}
+
+            <PlanForm />
+
+
+            <LogoutButton></LogoutButton>
             </>
         </div>
     );
