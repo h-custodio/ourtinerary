@@ -121,15 +121,26 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  body {
+    background: #ede0cc;
+  }
+
   header {
     padding: 1rem;
-    background: #ede0cc;
-    @apply text-foreground;
+    border-bottom: 2px solid rgba(26, 21, 16, 0.12);
   }
+
   main {
     padding: 1rem;
-    @apply bg-background text-foreground;
+    height: 20rem;
   }
+
+  footer {
+    padding: 1rem;
+    border-top: 2px solid rgba(26, 21, 16, 0.12);
+  }
+
   html {
     @apply font-sans;
   }
