@@ -82,7 +82,7 @@ export default function usePlans() {
 
     await fetchPlans(); // since DB is source of truth, fetch from it
 
-    return data;
+    return plan;
   };
 
   const deletePlan = async (idToRemove: string) => {
