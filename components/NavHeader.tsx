@@ -6,7 +6,7 @@ const NavHeader = () => {
     <header className="nav-header">
       <div className="flex justify-between">
         <Link href="/" className="text-2xl font-bold">
-          outinerary
+          ourtinerary
         </Link>
 
         <nav className="flex gap-1">
