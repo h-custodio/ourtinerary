@@ -9,7 +9,7 @@ import { Plan } from "@/types/plan";
 import { PlanForm } from "@/components/plan/PlanForm";
 
 export default function AccountDashboard() {
-  const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
+  //   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const username = "ourtinterary";
   const joinDate = "January 1, 1970";
   const friendCount = 5;
@@ -50,11 +50,11 @@ export default function AccountDashboard() {
       </div>
 
       <div className="flex justify-between w-full gap-4 mb-10">
-        <div className="flex-1 border rounded-xl border-[rgba(26,21,16,0.12)] bg-[rgb(225,214,189)] text-center p-2">
+        <div className="flex-1 border rounded-xl border-[rgba(26,21,16,0.12)] bg-[#E4D5BA] text-center p-2">
           <h1 className="text-2xl font-bold">{friendCount}</h1>
           <p className="text-lg">Friends</p>
         </div>
-        <div className="flex-1 border rounded-xl border-[rgba(26,21,16,0.12)] bg-[rgb(225,214,189)] text-center p-2">
+        <div className="flex-1 border rounded-xl border-[rgba(26,21,16,0.12)] bg-[#E4D5BA] text-center p-2">
           <h1 className="text-2xl font-bold">{planCount}</h1>
           <p className="text-lg">Plans</p>
         </div>
