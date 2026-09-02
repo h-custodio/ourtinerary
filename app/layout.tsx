@@ -26,7 +26,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <NavHeader />
+
         <main className="flex-1">{children}</main>
+
         <footer className="text-center text-xl font-bold">Footer</footer>
       </body>
     </html>
