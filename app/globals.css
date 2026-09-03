@@ -124,6 +124,7 @@
 
   body {
     background: #ede0cc;
+    color: #1a1510;
   }
 
   header {
@@ -133,7 +134,7 @@
 
   main {
     padding: 1rem;
-    height: 20rem;
+    height: 100%;
   }
 
   footer {
