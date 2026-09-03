@@ -57,7 +57,7 @@ export default function LoginPage() {
                 <p>{message}</p>
                 <button>Log In</button>
                 <br></br>
-                <Link href="/signup">Sign Up</Link>
+                <Link href="auth/signup">Sign Up</Link>
             </form>
         </div>
     );

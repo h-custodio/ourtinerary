@@ -17,7 +17,10 @@ import { format, startOfToday, addYears } from "date-fns";
 import ActivityDialog from "@/components/activity/ActivityDialog"
 import usePlans from "@/hooks/usePlans";
 import { Plan } from "@/types/plan";
+import { Activity } from "@/types/activity";
 
+// an optional parameter to be passed
+// used if a pre-existing plan is passed to be edited
 type PlanFormProps = {
   plan?: Plan;
 };
@@ -25,6 +28,7 @@ type PlanFormProps = {
 export function PlanForm({ plan }: PlanFormProps) {
   // dialog/popup state
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>();
   // custom plan hook
   const { createPlan, updatePlan, deletePlan, error: planError } = usePlans();
   // user input state
@@ -36,7 +40,8 @@ export function PlanForm({ plan }: PlanFormProps) {
 
   const router = useRouter();
 
-
+  // repopulate the inputs with existing plan's input
+  // if it is being edited
   useEffect(() => {
     if (plan) {
       setTitle(plan.title);
@@ -48,7 +53,6 @@ export function PlanForm({ plan }: PlanFormProps) {
       setDescription("");
     }
   }, [plan]);
-
 
   // error notification banner
   const showError = (message: string) => {
@@ -83,9 +87,9 @@ export function PlanForm({ plan }: PlanFormProps) {
 
     // if plan exists and is being updated
     if (plan) {
-      // await updatePlan(plan.plan_id, planData);
+      await updatePlan(plan.plan_id, planData);
     } else { // if this is a new plan being created
-      // await createPlan(planData);
+      await createPlan(planData);
     }
   };
 
@@ -95,7 +99,7 @@ export function PlanForm({ plan }: PlanFormProps) {
       return;
     }
 
-    // await deletePlan(plan.plan_id);
+    await deletePlan(plan.plan_id);
     router.push("/dashboard"); // return to user dashboard
   };
 
@@ -189,7 +193,12 @@ export function PlanForm({ plan }: PlanFormProps) {
           
           {/*buttons*/}
           <CardFooter className="flex gap-4">
-            <Button onClick={() => setDialogOpen(true)} className="border">Add Activity</Button>
+            <Button onClick={() => {
+              setDialogOpen(true);
+              setSelectedActivity(undefined);
+              }} className="border">
+                Add Activity
+            </Button>
 
             <Button className="border" onClick={handleSave}>Save Plan</Button>
 
@@ -197,10 +206,13 @@ export function PlanForm({ plan }: PlanFormProps) {
           </CardFooter>
 
           {/*activity popup*/}
-          <ActivityDialog
-            open={dialogOpen}
-            onOpenChange={setDialogOpen}
-          />
+        {plan && <ActivityDialog
+          plan={plan}
+          open={dialogOpen}
+          onOpenChange={setDialogOpen}
+          activity={selectedActivity} 
+        />
+        }
 
       </Card>
     </div>

@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import useActivity from "@/hooks/useActivities";
 
 import { Input } from "@/components/ui/input";
@@ -21,28 +23,64 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Activity } from "@/types/activity";
+import { Plan } from "@/types/plan";
 
+// props for open and closing popup
 type ActivityDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
+// an optional parameter to be passed
+// used if a pre-existing activity is passed to be edited
+type ActivityFormProps = {
+  activity?: Activity;
+};
+
+// plan needs to be passed for primary key reference
+type Props = ActivityDialogProps & ActivityFormProps & {
+  plan: Plan;
+};
+
 export default function ActivityDialog({
+  plan,
   open,
   onOpenChange,
-}: ActivityDialogProps) {
-  // const { error, loading, fetchActivity, createActivity, updateActivity, deleteActivity } = useActivity(
-  //   plan.id,
-  // );
+  activity,
+}: Props) {
+  const { error, loading, createActivity, updateActivity, deleteActivity } =
+    useActivity(plan.plan_id);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);
   const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  // repopulate the inputs with existing activitiy's input
+  // if it is being edited
+  useEffect(() => {
+    if (activity) {
+      setTitle(activity.title);
+      setDescription(activity.description);
+      setStartTime(activity.start_time);
+      setEndTime(activity.end_time);
+      setLocation(activity.location);
+    } else {
+      setTitle("");
+      setDescription("");
+      setStartTime("");
+      setEndTime("");
+      setLocation("");
+    }
+  }, [activity]);
+
 
   const handleError = (message: string) => {
     setFormError(message);
@@ -75,39 +113,39 @@ export default function ActivityDialog({
       return;
     }
 
-    if (!address.trim()) {
-      handleError("Please Enter an Activity Address");
+    if (!location.trim()) {
+      handleError("Please Enter an Activity Location");
       return;
     }
 
     const activityData = {
-      title,
-      description,
-      startTime,
-      endTime,
-      address,
+      title: title,
+      description: description,
+      start_time: startTime,
+      end_time: endTime,
+      location: location,
+      plan_id: plan.plan_id,
     };
 
-    // if (activity) {
-    //   // await updateActivity(activity.id, activityData)
-    // } else {
-    //   // await createActivity(activityData)
-    // }
+    if (activity) {
+      await updateActivity(activity.plan_id, activityData)
+    } else {
+      await createActivity(activityData)
+    }
   };
 
   const handleDelete = async () => {
-    // if (!activity) {
-    //   setFormError("Plan must be created first to be deleted");
+    if (!activity) {
+      setFormError("Plan must be created first to be deleted");
     return;
-    // }
+    }
 
-    // await deleteActivity(activity.id);
-    // router.push("/dashboard"); // return to user dashboard
+    await deleteActivity(activity.plan_id);
+    router.push("/dashboard"); // return to user dashboard
   };
 
   return (
     <div>
-      {/* Hopefully this error alert works, smile :) */}
       <AlertDialog
         open={isErrorOpen}
         onOpenChange={(open) => !open && handleCloseError}
@@ -190,14 +228,14 @@ export default function ActivityDialog({
             </div>
 
             <div className="mb-3">
-              <Label htmlFor="address" className="mb-1">
-                Activity Address
+              <Label htmlFor="location" className="mb-1">
+                Activity Location
               </Label>
               <Input
-                id="address"
-                value={address}
+                id="location"
+                value={location}
                 placeholder="123 Main ST, Montreal, QC, H3Z 2Y7, Canada"
-                onChange={(e) => setAddress(e.target.value)}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
 

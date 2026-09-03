@@ -41,6 +41,16 @@ export default function usePlans() {
   }, [fetchPlans]); // runs this effect when fetchPlans changes
 
   const createPlan = async (planData: PlanInsert) => {
+    // get authenticated user id
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      const errorMessage = userError?.message ?? "User is not authenticated";
+      console.error(errorMessage);
+      setError(errorMessage);
+      return;
+    }
+    
     // insert planData (from user input) into database
     const { data: plan, error: planError } = await supabase
       .from("plan")
@@ -50,16 +60,6 @@ export default function usePlans() {
 
     if (planError || !plan) {
       const errorMessage = planError?.message ?? "Failed to create plan";
-      console.error(errorMessage);
-      setError(errorMessage);
-      return;
-    }
-
-    // get authenticated user id
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      const errorMessage = userError?.message ?? "User is not authenticated";
       console.error(errorMessage);
       setError(errorMessage);
       return;
