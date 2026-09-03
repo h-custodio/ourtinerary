@@ -12,7 +12,6 @@ export default async function PlanPage() {
         return;
     }
 
-
     // No authenticated user
     if (!user) {
         console.log("user not authenticated, no access");
