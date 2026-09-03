@@ -11,13 +11,13 @@ const NavHeader = () => {
 
         <nav className="flex gap-1">
           <Link
-            href="/"
+            href="/friend"
             className={buttonVariants({ size: "lg", variant: "secondary" })}
           >
-            Plans
+            Friends
           </Link>
           <Link
-            href="/dashboard"
+            href="/account"
             className={buttonVariants({ size: "lg", variant: "secondary" })}
           >
             Account
