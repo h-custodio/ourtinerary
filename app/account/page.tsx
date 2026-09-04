@@ -14,7 +14,6 @@ export default function AccountDashboard() {
   //   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const username = "ourtinterary";
   const joinDate = "January 1, 1970";
-  const friendCount = 5;
   const planCount = 12;
   const plans = [
     { title: "Rock Climbing", date: "September 9th, 2026" },
@@ -63,7 +62,7 @@ export default function AccountDashboard() {
       </div>
 
       <div className="flex justify-between mb-3">
-        <h2 className="text-2xl font-bold">Upcoming Plans</h2>
+        <h2 className="text-2xl font-bold text-accent">— Upcoming Plans</h2>
         <Link
           href="/plan-page"
           className={buttonVariants({ size: "lg", variant: "default" })}
@@ -90,10 +89,10 @@ export default function AccountDashboard() {
               <div className="flex justify-between border rounded-xl border-border bg-card p-4 mb-2">
                 <div>
                   <p className="text-xl font-bold">{plan.title}</p>
-                  <p className="text-lg">{plan.date}</p>
+                  <p className="text-lg text-muted-foreground">{plan.date}</p>
                 </div>
                 <div className="flex items-center">
-                  <ChevronRight size={20} style={{ color: "#7A6A52" }} />
+                  <ChevronRight size={20} className="text-muted-foreground" />
                 </div>
               </div>
             </Link>
