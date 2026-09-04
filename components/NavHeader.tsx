@@ -14,7 +14,13 @@ const NavHeader = () => {
   //     return;
   //   }
 
-  const user = "null";
+  // ==============================================
+  // REMEMBER TO DELETE THIS
+  // ----------------------------------------------
+  const user = "admin"; // REMEMBER TO DELETE THIS
+  // ----------------------------------------------
+  // REMEMBER TO DELETE THIS
+  // ==============================================
 
   return (
     <div className="flex justify-between">
