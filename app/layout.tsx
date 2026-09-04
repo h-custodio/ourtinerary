@@ -28,8 +28,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <NavHeader />
 
         <main className="flex-1">{children}</main>
-
-        <footer className="text-center text-xl font-bold">Footer</footer>
       </body>
     </html>
   );
