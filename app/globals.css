@@ -68,7 +68,7 @@
   --accent: oklch(0.582 0.122 58.2); /* #B07030 */
   --accent-foreground: oklch(0.985 0 0); /* #FAFAFA */
   --border: oklch(0.203 0.013 65.5 / 0.12); /* rgba(26,21,16,0.12) */
-  --input: oklch(0.203 0.013 65.5 / 0.12); /* rgba(26,21,16,0.12) */
+  --input: oklch(0.842 0.032 78.5); /* #D9C9B0 */
   --ring: oklch(0.582 0.122 58.2); /* #B07030 */
   --destructive: oklch(0.577 0.245 27.325);
 
