@@ -10,8 +10,8 @@ export function HomePage() {
         <span className="text-accent">without all the hassle</span>
       </h1>
       <p className="text-xl text-muted-foreground">
-        <span className="text-lg font-bold">ourtinerary</span> allows you to
-        coordinate your plans with friends effectively and easily
+        <span className="text-2xl font-extrabold">ourtinerary</span> allows you
+        to coordinate your plans with friends effectively and easily
       </p>
 
       <div className="my-16">
