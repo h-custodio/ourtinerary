@@ -14,7 +14,7 @@ const NavHeader = () => {
   //     return;
   //   }
 
-  const user = "";
+  const user = "null";
 
   return (
     <header className="nav-header">
@@ -24,7 +24,14 @@ const NavHeader = () => {
         </Link>
 
         <nav className="flex gap-1">
-          {user !== null && (
+          {user === null ? (
+            <Link
+              href="/auth/login"
+              className={buttonVariants({ size: "lg", variant: "default" })}
+            >
+              Sign in
+            </Link>
+          ) : (
             <div className="flex gap-1">
               <Link
                 href="/account"
@@ -34,14 +41,6 @@ const NavHeader = () => {
               </Link>
               <LogoutButton />
             </div>
-          )}
-          {user === null && (
-            <Link
-              href="/auth/login"
-              className={buttonVariants({ size: "lg", variant: "default" })}
-            >
-              Sign in
-            </Link>
           )}
         </nav>
       </div>
