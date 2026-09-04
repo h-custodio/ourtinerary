@@ -1,36 +1,54 @@
 import Link from "next/link";
+import LogoutButton from "@/components/LogoutButton";
 import { buttonVariants } from "@/components/ui/button";
 
 const NavHeader = () => {
-  return (
-    <header className="nav-header">
-      <div className="flex justify-between">
-        <Link href="/" className="text-2xl font-bold">
-          ourtinerary
-        </Link>
+  // verify that user is authenticated
+  //   const {
+  //     data: { user },
+  //     error,
+  //   } = await supabase.auth.getUser();
 
-        <nav className="flex gap-1">
-          <Link
-            href="/friend"
-            className={buttonVariants({ size: "lg", variant: "secondary" })}
-          >
-            Friends
-          </Link>
-          <Link
-            href="/account"
-            className={buttonVariants({ size: "lg", variant: "secondary" })}
-          >
-            Account
-          </Link>
+  //   if (error) {
+  //     console.error("Failed to get user:", error);
+  //     return;
+  //   }
+
+  // ==============================================
+  // REMEMBER TO DELETE THIS
+  // ----------------------------------------------
+  const user = "admin"; // REMEMBER TO DELETE THIS
+  // ----------------------------------------------
+  // REMEMBER TO DELETE THIS
+  // ==============================================
+
+  return (
+    <div className="flex justify-between">
+      <Link href="/" className="text-3xl font-bold">
+        ourtinerary
+      </Link>
+
+      <nav>
+        {user === null ? (
           <Link
             href="/auth/login"
             className={buttonVariants({ size: "lg", variant: "default" })}
           >
             Sign in
           </Link>
-        </nav>
-      </div>
-    </header>
+        ) : (
+          <div className="flex gap-1">
+            <Link
+              href="/account"
+              className={buttonVariants({ size: "lg", variant: "secondary" })}
+            >
+              Account
+            </Link>
+            <LogoutButton />
+          </div>
+        )}
+      </nav>
+    </div>
   );
 };
 
