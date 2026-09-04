@@ -17,34 +17,32 @@ const NavHeader = () => {
   const user = "null";
 
   return (
-    <header className="nav-header">
-      <div className="flex justify-between">
-        <Link href="/" className="text-3xl font-bold">
-          ourtinerary
-        </Link>
+    <div className="flex justify-between">
+      <Link href="/" className="text-3xl font-bold">
+        ourtinerary
+      </Link>
 
-        <nav className="flex gap-1">
-          {user === null ? (
+      <nav>
+        {user === null ? (
+          <Link
+            href="/auth/login"
+            className={buttonVariants({ size: "lg", variant: "default" })}
+          >
+            Sign in
+          </Link>
+        ) : (
+          <div className="flex gap-1">
             <Link
-              href="/auth/login"
-              className={buttonVariants({ size: "lg", variant: "default" })}
+              href="/account"
+              className={buttonVariants({ size: "lg", variant: "secondary" })}
             >
-              Sign in
+              Account
             </Link>
-          ) : (
-            <div className="flex gap-1">
-              <Link
-                href="/account"
-                className={buttonVariants({ size: "lg", variant: "secondary" })}
-              >
-                Account
-              </Link>
-              <LogoutButton />
-            </div>
-          )}
-        </nav>
-      </div>
-    </header>
+            <LogoutButton />
+          </div>
+        )}
+      </nav>
+    </div>
   );
 };
 
