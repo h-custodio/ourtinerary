@@ -22,20 +22,20 @@ export default function SignupPage() {
     setMessage("Signing up...");
 
     // uses Supabase API on the initialized client to log in
-    // const { data, error } = await supabase.auth.signUp({
-    //     email,
-    //     password
-    // });
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+    });
 
     // // signup handling validation
-    // if (error) {
-    //     setMessage(error.message);
-    //     console.log("error with signing up: ", error.message );
-    //     return;
-    // }
+    if (error) {
+        setMessage(error.message);
+        console.log("error with signing up: ", error.message );
+        return;
+    }
 
-    // setMessage("Account created! Check your email to confirm your account.");
-    // console.log("Account created:", data.user);
+    setMessage("Account created! Check your email to confirm your account.");
+    console.log("Account created:", data.user);
   }
 
   return (

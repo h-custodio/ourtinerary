@@ -1,27 +1,32 @@
 import { PlanForm } from "@/components/plan/PlanForm";
 import { redirect } from "next/navigation";
-import supabaseServer from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/server";
 
 export default async function PlanPage() {
-    // verify that user is authenticated
-    const { data: {user}, error } = await supabaseServer.auth.getUser();
+    const supabaseServer = await createClient();
 
+    const {
+        data: { user },
+        error,
+    } = await supabaseServer.auth.getUser();
+
+    console.log("PLAN PAGE USER:", user);
+    console.log("PLAN PAGE ERROR:", error);
 
     if (error) {
         console.error("Failed to get user:", error);
-        return;
+        return <div>Auth error: {error.message}</div>;
     }
 
-    // No authenticated user
     if (!user) {
         console.log("user not authenticated, no access");
-        redirect("auth/login");
+        redirect("/auth/login");
     }
 
-
-  return (
-    <div>
-      <PlanForm />
-    </div>
-  );
+    return (
+        <div className="flex-1 px-8 pb-12 pt-25 max-w-5xl mx-auto w-full text-center">
+            <PlanForm />
+        </div>
+    );
 }
+

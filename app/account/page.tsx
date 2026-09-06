@@ -40,7 +40,7 @@ export default function AccountDashboard() {
   //   // No authenticated user
   //   if (!user) {
   //     console.log("user not authenticated, no access");
-  //     redirect("/login");
+  //     redirect("/auth/login");
   //   }
 
   return (
@@ -82,7 +82,7 @@ export default function AccountDashboard() {
           </Link>
         </div>
       ) : (
-        <div className="max-h-[400px] overflow-y-auto pr-1">
+        <div className="max-h-[700px] overflow-y-auto pr-1">
           {/* index should be plan.id */}
           {plans.map((plan, index) => (
             <Link key={index} href="/plan-page">

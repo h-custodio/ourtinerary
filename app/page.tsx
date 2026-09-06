@@ -1,23 +1,35 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
-export function HomePage() {
+export default function HomePage() {
   return (
-    <div className="flex-1 px-8 pb-12 pt-30 max-w-4xl mx-auto w-full text-center">
-      <h1 className="text-7xl font-bold">
+    <div className="flex-1 px-8 pb-12 pt-25 max-w-5xl mx-auto w-full text-center">
+
+      <div className="inline-flex items-center gap-3 px-3 py-2 rounded-full border text-xs mb-8 font-mono tracking-widest uppercase">
+        Think It 
+        <span className="w-1 h-1 rounded-full inline-block bg-black" />
+        Plan It 
+        <span className="w-1 h-1 rounded-full inline-block bg-black" />
+        Do It
+      </div>
+
+
+      <h1 className="text-7xl font-bold leading-[1.15]">
         Coordinate your plans
         <br />
         <span className="text-accent">without all the hassle</span>
       </h1>
-      <p className="text-xl text-muted-foreground">
-        <span className="text-2xl font-extrabold">ourtinerary</span> allows you
-        to coordinate your plans with friends effectively and easily
+      <p className="block w-full max-w-2xl mx-auto mt-5 text-xl text-muted-foreground">
+        <span className="text-2xl font-extrabold">Ourtinerary </span> 
+        turns “we should totally do that” into “okay, it’s happening.” 
+        Organize your plans, keep everyone on the same page, 
+        and rescue your best ideas from the Notes app graveyard.
       </p>
 
-      <div className="my-16">
+      <div className="my-14">
         <Link
-          href="/auth/signup"
-          className={`${buttonVariants({ size: "lg", variant: "default" })} py-5 px-10 text-lg font-bold`}
+          href="/auth/login"
+          className={`${buttonVariants({ size: "lg", variant: "default" })} py-6 px-11 text-xl font-bold`}
         >
           Get Started →
         </Link>
@@ -25,31 +37,31 @@ export function HomePage() {
 
       <div className="w-full border-t border-border" />
 
-      <div className="flex justify-between w-full gap-10 my-16 text-start">
-        {[
-          {
-            title: "Discover",
-            desc: "Find unique activities available near you.",
-          },
-          {
-            title: "Gather",
-            desc: "Invite your friends with ease.",
-          },
-          {
-            title: "Plan",
-            desc: "Collaborate and coordinate your activities.",
-          },
-        ].map((item, index) => (
-          <div key={index} className="flex-1">
-            <h1 className="text-4xl font-bold">{item.title}</h1>
-            <p className="text-xl text-muted-foreground">{item.desc}</p>
-          </div>
-        ))}
-      </div>
+        {/* <div className="flex justify-between w-full gap-10 my-16 text-start">
+          {[
+            {
+              title: "Discover",
+              desc: "Find unique activities available near you.",
+            },
+            {
+              title: "Gather",
+              desc: "Invite your friends with ease.",
+            },
+            {
+              title: "Plan",
+              desc: "Collaborate and coordinate your activities.",
+            },
+          ].map((item, index) => (
+            <div key={index} className="flex-1">
+              <h1 className="text-4xl font-bold">{item.title}</h1>
+              <p className="text-xl text-muted-foreground">{item.desc}</p>
+            </div>
+          ))}
+        </div>
 
-      <div className="w-full border-t border-border" />
+      <div className="w-full border-t border-border" /> */}
 
-      <div className="my-20 text-start">
+      <div className="my-17 text-start">
         <h2 className="text-3xl font-bold text-center mb-12">How it works</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
@@ -102,4 +114,4 @@ export function HomePage() {
   );
 }
 
-export default HomePage;
+

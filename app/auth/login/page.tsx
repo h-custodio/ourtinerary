@@ -4,13 +4,16 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+import supabase from "@/lib/supabase/client"; 
+import { useRouter } from "next/navigation";
 
-import supabase from "@/lib/supabase/client"; // global variable from lib/supabase/client.ts
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const router = useRouter();
 
   async function handleSubmit(
     e: React.SubmitEvent<HTMLFormElement>,
@@ -22,20 +25,21 @@ export default function LoginPage() {
     setMessage("Logging in...");
 
     // // uses Supabase API on the initialized client to log in
-    // const { data, error } = await supabase.auth.signInWithPassword({
-    //     email,
-    //     password
-    // });
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
 
     // // login handling validation
-    // if (error) {
-    //     setMessage(error.message);
-    //     console.log("error with logging in: ", error.message)
-    //     return;
-    // }
+    if (error) {
+        setMessage(error.message);
+        console.log("error with logging in: ", error.message)
+        return;
+    }
 
-    // setMessage("Successfully logged in!");
-    // console.log("logged in: ", data.user);
+    setMessage("Successfully logged in!");
+    console.log("logged in: ", data.user);
+    router.push("/account/");
   }
 
   return (
