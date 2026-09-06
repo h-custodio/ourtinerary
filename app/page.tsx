@@ -4,15 +4,13 @@ import { buttonVariants } from "@/components/ui/button";
 export default function HomePage() {
   return (
     <div className="flex-1 px-8 pb-12 pt-25 max-w-5xl mx-auto w-full text-center">
-
       <div className="inline-flex items-center gap-3 px-3 py-2 rounded-full border text-xs mb-8 font-mono tracking-widest uppercase">
-        Think It 
+        Think It
         <span className="w-1 h-1 rounded-full inline-block bg-black" />
-        Plan It 
+        Plan It
         <span className="w-1 h-1 rounded-full inline-block bg-black" />
         Do It
       </div>
-
 
       <h1 className="text-7xl font-bold leading-[1.15]">
         Coordinate your plans
@@ -20,10 +18,10 @@ export default function HomePage() {
         <span className="text-accent">without all the hassle</span>
       </h1>
       <p className="block w-full max-w-2xl mx-auto mt-5 text-xl text-muted-foreground">
-        <span className="text-2xl font-extrabold">Ourtinerary </span> 
-        turns “we should totally do that” into “okay, it’s happening.” 
-        Organize your plans, keep everyone on the same page, 
-        and rescue your best ideas from the Notes app graveyard.
+        <span className="text-2xl font-extrabold">Ourtinerary </span>
+        turns “we should totally do that” into “okay, it’s happening.” Organize
+        your plans, keep everyone on the same page, and rescue your best ideas
+        from the Notes app graveyard.
       </p>
 
       <div className="my-14">
@@ -37,7 +35,7 @@ export default function HomePage() {
 
       <div className="w-full border-t border-border" />
 
-        {/* <div className="flex justify-between w-full gap-10 my-16 text-start">
+      {/* <div className="flex justify-between w-full gap-10 my-16 text-start">
           {[
             {
               title: "Discover",
@@ -113,5 +111,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-
