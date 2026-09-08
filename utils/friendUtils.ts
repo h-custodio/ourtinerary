@@ -1,56 +1,42 @@
-"use client";
-
-import { useState } from "react";
-
-import { Friend, FRIEND_TYPES, FriendType } from "@/types/friend";
-import type { User } from "@supabase/supabase-js";
-
 import supabase from "@/lib/supabase/client";
+import { FRIEND_TYPES, FriendType, Friend } from "@/types/friend";
+import type { User } from "@supabase/supabase-js";
 
 interface loadFriendProfilesProps {
   friends: Friend[];
   user: User | null;
-  FriendType: FriendType;
+  friendType: FriendType;
 }
 
-export async function loadFriendProfiles({
+export async function fetchFriendProfiles({
   friends,
   user,
-  FriendType,
+  friendType,
 }: loadFriendProfilesProps) {
-  const [targetIds, setTargetIds] = useState<string[]>([]);
+  let targetIds: string[] = [];
 
-  // 1. Extract the target IDs (e.g., friend_id)
-  if (FriendType === FRIEND_TYPES.FRIENDS) {
-    setTargetIds(
-      friends
-        .filter((friend) => friend.accepted === true)
-        .map((friend) => friend.friend_id),
-    );
-  } else if (FriendType === FRIEND_TYPES.REQUESTS) {
-    setTargetIds(
-      friends
-        .filter(
-          (friend) =>
-            friend.accepted === false && user?.id === friend.friend_id,
-        )
-        .map((friend) => friend.friend_id),
-    );
+  if (friendType === FRIEND_TYPES.FRIENDS) {
+    targetIds = friends
+      .filter((friend) => friend.accepted === true)
+      .map((friend) => friend.friend_id);
+  } else if (friendType === FRIEND_TYPES.REQUESTS) {
+    targetIds = friends
+      .filter(
+        (friend) => friend.accepted === false && user?.id === friend.friend_id,
+      )
+      .map((friend) => friend.user_id);
   } else {
-    setTargetIds(
-      friends
-        .filter(
-          (friend) => friend.accepted === false && user?.id === friend.user_id,
-        )
-        .map((friend) => friend.friend_id),
-    );
+    targetIds = friends
+      .filter(
+        (friend) => friend.accepted === false && user?.id === friend.user_id,
+      )
+      .map((friend) => friend.friend_id);
   }
 
   if (targetIds.length === 0) {
     return [];
   }
 
-  // 2. Fetch all matching profiles in a single network request
   const { data: friendProfiles, error } = await supabase
     .from("profiles")
     .select("*")
