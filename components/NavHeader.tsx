@@ -35,6 +35,12 @@ const NavHeader = async () => {
         ) : (
           <div className="flex gap-1">
             <Link
+              href="/friend"
+              className={buttonVariants({ size: "lg", variant: "secondary" })}
+            >
+              Friend
+            </Link>
+            <Link
               href="/account"
               className={buttonVariants({ size: "lg", variant: "secondary" })}
             >
