@@ -1,24 +1,25 @@
-import FriendDashboard from "@/components/friend/FriendDashboard";
+import FriendDisplay from "@/components/friend/FriendDisplay";
 
 import { redirect } from "next/navigation";
-import supabaseServer from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/server";
 
 export default async function FriendPage() {
+  const supabaseServer = await createClient();
+
   const {
     data: { user },
     error,
   } = await supabaseServer.auth.getUser();
 
-  // if (error) {
-  //   console.error("Failed to get user:", error);
-  //   return;
-  // }
+  if (error) {
+    console.error("Failed to get user:", error);
+    return;
+  }
 
-  // // No authenticated user
-  // if (!user) {
-  //   console.log("user not authenticated, no access");
-  //   redirect("auth/login");
-  // }
+  if (!user) {
+    console.log("user not authenticated, no access");
+    redirect("/auth/login");
+  }
 
-  return <FriendDashboard user={user} />;
+  return <FriendDisplay user={user} />;
 }
