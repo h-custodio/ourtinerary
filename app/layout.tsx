@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import NavHeader from "@/components/NavHeader";
-import "./globals.css";
+import "@/app/globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ourtinerary | Discover, Gather, Plan",
+  title: "ourtinerary | Think it, Plan it, Do it",
   description: "Developed by Frank Mai and Hendrick Custodio",
 };
 

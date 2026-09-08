@@ -60,7 +60,7 @@ export default function useActivity(planId: string) {
 
     if (activityError) {
       console.error("failed to insert activity: ", activityError);
-      setError(activityError.message);
+      setError("Failed to insert activity");
       return;
     }
 
@@ -88,7 +88,7 @@ export default function useActivity(planId: string) {
       .from("activity")
       .delete()
       .eq("activity_id", idToRemove)
-      .eq("plan_id", planId);
+      .eq("plan_id", planId); // passed from parent
 
     if (activityError) {
       console.error("failed to delete: ", activityError);
@@ -121,7 +121,7 @@ export default function useActivity(planId: string) {
       .from("activity")
       .update(newActivityData)
       .eq("activity_id", idToUpdate)
-      .eq("plan_id", planId);
+      .eq("plan_id", planId); // passed from parent
 
     if (activityError) {
       console.error("failed to update: ", error);

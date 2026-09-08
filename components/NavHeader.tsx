@@ -1,26 +1,22 @@
+import createClient from "@/lib/supabase/server";
+
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 import { buttonVariants } from "@/components/ui/button";
 
-const NavHeader = () => {
+const NavHeader = async () => {
   // verify that user is authenticated
-  //   const {
-  //     data: { user },
-  //     error,
-  //   } = await supabase.auth.getUser();
+  const supabaseServer = await createClient();
 
-  //   if (error) {
-  //     console.error("Failed to get user:", error);
-  //     return;
-  //   }
+  const {
+    data: { user },
+    error,
+  } = await supabaseServer.auth.getUser();
 
-  // ==============================================
-  // REMEMBER TO DELETE THIS
-  // ----------------------------------------------
-  const user = "admin"; // REMEMBER TO DELETE THIS
-  // ----------------------------------------------
-  // REMEMBER TO DELETE THIS
-  // ==============================================
+  if (error) {
+    console.error("Failed to get user:", error);
+    return;
+  }
 
   return (
     <div className="flex justify-between">
@@ -29,7 +25,7 @@ const NavHeader = () => {
       </Link>
 
       <nav>
-        {user === null ? (
+        {!user ? (
           <Link
             href="/auth/login"
             className={buttonVariants({ size: "lg", variant: "default" })}

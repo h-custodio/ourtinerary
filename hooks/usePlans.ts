@@ -50,39 +50,43 @@ export default function usePlans() {
       setError(errorMessage);
       return;
     }
-    
-    // insert planData (from user input) into database
-    const { data: plan, error: planError } = await supabase
-      .from("plan")
-      .insert(planData)
-      .select("plan_id") // data retrieves plan_id to be used later in the function
-      .single(); 
 
-    if (planError || !plan) {
+    // Create plan + initial plan_member through the database function
+    const { data: planId, error: planError } = await supabase.rpc(
+      "create_plan",
+      {
+        plan_title: planData.title,
+        plan_date: planData.date,
+        plan_description: planData.description,
+      }
+    );
+
+    if (planError || !planId) {
       const errorMessage = planError?.message ?? "Failed to create plan";
       console.error(errorMessage);
       setError(errorMessage);
       return;
     }
 
-    // when users create a plan, they are automatically the host
-    const { data, error: memberError } = await supabase
-      .from("plan_member")
-      .insert({
-        plan_id: plan.plan_id, // from the retrieved row data
-        user_id: user.id,
-        clearance: 0 // host level clearance
-    });
+      // RPC gave us the ID, so retrieve the actual plan
+    const { data: createdPlan, error: fetchError } = await supabase
+      .from("plan")
+      .select("*")
+      .eq("plan_id", planId)
+      .single();
 
-    if (memberError) {
-      console.error(memberError);
-      setError(memberError.message);
+    if (fetchError || !createdPlan) {
+      const errorMessage =
+        fetchError?.message ?? "Failed to retrieve created plan";
+
+      console.error(errorMessage);
+      setError(errorMessage);
       return;
     }
 
-    await fetchPlans(); // since DB is source of truth, fetch from it
-
-    return plan;
+    await fetchPlans(); 
+    
+    return createdPlan;
   };
 
   const deletePlan = async (idToRemove: string) => {

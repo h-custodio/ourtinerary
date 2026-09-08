@@ -49,8 +49,8 @@ export default function ActivityDialog({
   onOpenChange,
   activity,
 }: Props) {
-  const { error, loading, createActivity, updateActivity, deleteActivity } =
-    useActivity(plan.plan_id);
+  const { error: activityError, loading, createActivity, updateActivity, deleteActivity } =
+useActivity(plan.plan_id);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -61,7 +61,7 @@ export default function ActivityDialog({
   const [formError, setFormError] = useState<string | null>(null);
   const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
 
-  const router = useRouter();
+  const [currentActivity, setCurrentActivity] = useState<Activity | undefined>();
 
   // repopulate the inputs with existing activitiy's input
   // if it is being edited
@@ -93,6 +93,7 @@ export default function ActivityDialog({
   };
 
   const handleSave = async () => {
+
     if (!title.trim()) {
       handleError("Please Enter an Activity Title");
       return;
@@ -127,21 +128,32 @@ export default function ActivityDialog({
       plan_id: plan.plan_id,
     };
 
-    if (activity) {
-      await updateActivity(activity.plan_id, activityData)
-    } else {
-      await createActivity(activityData)
+    try {
+      if (currentActivity) {
+        await updateActivity(currentActivity.plan_id, activityData);
+      } else {
+        const createdActivity = await createActivity(activityData);
+
+        if (!createdActivity) {
+          return;
+        }
+
+        setCurrentActivity(createdActivity);
+        console.log("activity created");
+      }
+    } catch {
+      console.error("Error saving activity", activityError);
     }
   };
 
   const handleDelete = async () => {
-    if (!activity) {
+    if (!currentActivity) {
       setFormError("Plan must be created first to be deleted");
     return;
     }
 
-    await deleteActivity(activity.plan_id);
-    router.push("/dashboard"); // return to user dashboard
+    await deleteActivity(currentActivity.plan_id);
+    onOpenChange(false); // close dialog
   };
 
   return (
@@ -172,7 +184,11 @@ export default function ActivityDialog({
           <DialogHeader>
             <DialogTitle>Enter Activity Details</DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSave}>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            handleSave();
+          }}
+            >
             <div className="mb-3">
               <Label htmlFor="title" className="mb-1">
                 Activity Title
@@ -241,11 +257,11 @@ export default function ActivityDialog({
 
             <div className="flex items-center justify-between">
               <div className="flex gap-1">
-                <Button variant="secondary">Cancel</Button>
+
                 <Button type="submit">Submit</Button>
               </div>
 
-              <Button variant="destructive" onClick={handleDelete}>
+              <Button type="button" variant="destructive" onClick={handleDelete}>
                 Delete
               </Button>
             </div>

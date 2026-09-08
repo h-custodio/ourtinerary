@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "@/types/database.types";
 
-export async function createClient() {
+export default async function createClient() {
     // access to the cookies belonging to the current request
     const cookieStore = await cookies();
 
@@ -29,7 +29,3 @@ export async function createClient() {
         }
     });
 }
-
-const supabaseServer = await createClient();
-
-export default supabaseServer;

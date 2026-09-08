@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
-
-import supabase from "@/lib/supabase/client"; // global variable from lib/supabase/client.ts
+import supabase from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+
+  const router = useRouter();
 
   async function handleSubmit(
     e: React.SubmitEvent<HTMLFormElement>,
@@ -22,60 +25,82 @@ export default function LoginPage() {
     setMessage("Logging in...");
 
     // // uses Supabase API on the initialized client to log in
-    // const { data, error } = await supabase.auth.signInWithPassword({
-    //     email,
-    //     password
-    // });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     // // login handling validation
-    // if (error) {
-    //     setMessage(error.message);
-    //     console.log("error with logging in: ", error.message)
-    //     return;
-    // }
+    if (error) {
+      setMessage(error.message);
+      console.log("error with logging in: ", error.message);
+      return;
+    }
 
-    // setMessage("Successfully logged in!");
-    // console.log("logged in: ", data.user);
+    setMessage("Successfully logged in!");
+    console.log("logged in: ", data.user);
+    router.push("/account/");
   }
 
   return (
-    <div className="flex-1 max-w-[20%] my-30 mx-auto rounded-2xl border border-border bg-card p-4 shadow-2xl overflow-hidden">
-      <h1 className="mb-4">Login</h1>
+    <div className="w-full max-w-md my-12 mx-auto p-4 overflow-hidden">
+      <div className="text-center mb-6">
+        <h1 className="text-4xl font-bold">Welcome back!</h1>
+        <p className="text-lg text-muted-foreground">
+          Sign in to your account.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-2">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <Label htmlFor="email" className="mb-1 text-muted-foreground block">
+            Email
+          </Label>
           <Input
+            id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="example@email.com"
-            required // browser validates for empty input
+            className="py-2"
+            required
           />
         </div>
 
-        <div className="mb-2">
+        <div>
+          <Label
+            htmlFor="password"
+            className="mb-1 text-muted-foreground block"
+          >
+            Password
+          </Label>
           <Input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="password"
-            required // browser validates for empty input
+            className="py-2"
+            required
           />
         </div>
 
-        <p>{message}</p>
-        <div className="flex justify-center mb-2">
-          <Button type="submit">Log In</Button>
-        </div>
+        {message && (
+          <p className="text-sm text-center text-red-500">{message}</p>
+        )}
 
-        <div className="flex justify-center">
+        <Button type="submit" className="w-full py-4 text-lg font-bold">
+          Log in
+        </Button>
+
+        <div className="flex justify-center text-sm">
           <p className="inline-flex items-center gap-1 text-muted-foreground">
-            Don't have an account?
+            Already have an account?
             <Link
               href="/auth/signup"
-              className={`${buttonVariants({ size: "default", variant: "link" })} !text-accent !p-0`}
+              className={`${buttonVariants({ variant: "link" })} !text-accent !p-0`}
             >
-              Sign Up
+              Sign up
             </Link>
           </p>
         </div>
