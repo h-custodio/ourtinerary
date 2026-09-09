@@ -49,7 +49,7 @@ export function PlanForm({ plan }: PlanFormProps) {
   return () => {
     console.log("PlanForm UNMOUNTED");
   };
-}, []);
+  }, []);
 
   // repopulate the inputs with existing plan's input
   // if it is being edited
@@ -95,7 +95,7 @@ export function PlanForm({ plan }: PlanFormProps) {
       date: date.toISOString(),
       description: description.trim(),
     };
-    
+
     try {
       // if plan exists and is being updated
       if (currentPlan) {
@@ -109,7 +109,7 @@ export function PlanForm({ plan }: PlanFormProps) {
         }
 
         // we have a plan to work with to add activities to
-        setCurrentPlan(createdPlan);
+        router.push(`/plans/${createdPlan.plan_id}`);
         console.log("Plan created");
       }
     } catch {

@@ -64,7 +64,7 @@ export default function AccountDashboard() {
       <div className="flex justify-between mb-3">
         <h2 className="text-2xl font-bold text-accent">— Upcoming Plans</h2>
         <Link
-          href="/plan-page"
+          href="/plans/new"
           className={buttonVariants({ size: "lg", variant: "default" })}
         >
           Create Plan
@@ -77,7 +77,7 @@ export default function AccountDashboard() {
           <p className="text-lg text-muted-foreground mb-4">
             Start organizing your next trip with friends!
           </p>
-          <Link href="/plan-page" className={buttonVariants({ size: "lg" })}>
+          <Link href="/plans/new" className={buttonVariants({ size: "lg" })}>
             Create your first plan
           </Link>
         </div>
@@ -85,7 +85,7 @@ export default function AccountDashboard() {
         <div className="max-h-[700px] overflow-y-auto pr-1">
           {/* index should be plan.id */}
           {plans.map((plan, index) => (
-            <Link key={index} href="/plan-page">
+            <Link key={index} href="/plans/new">
               <div className="flex justify-between border rounded-xl border-border bg-card p-4 mb-2">
                 <div>
                   <p className="text-xl font-bold">{plan.title}</p>

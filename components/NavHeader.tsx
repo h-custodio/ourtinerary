@@ -5,7 +5,6 @@ import LogoutButton from "@/components/LogoutButton";
 import { buttonVariants } from "@/components/ui/button";
 
 const NavHeader = async () => {
-  // verify that user is authenticated
   const supabaseServer = await createClient();
 
   const {
@@ -15,13 +14,12 @@ const NavHeader = async () => {
 
   if (error) {
     console.error("Failed to get user:", error);
-    return;
   }
 
   return (
     <div className="flex justify-between">
       <Link href="/" className="text-3xl font-bold">
-        ourtinerary
+        OURTINERARY
       </Link>
 
       <nav>

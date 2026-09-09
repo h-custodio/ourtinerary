@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Activity } from "@/types/activity";
 import { Plan } from "@/types/plan";
+import { validateTimeInterval } from "@/utils/dateAndTimeUtils";
 
 // props for open and closing popup
 type ActivityDialogProps = {
@@ -61,7 +62,7 @@ useActivity(plan.plan_id);
   const [formError, setFormError] = useState<string | null>(null);
   const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
 
-  const [currentActivity, setCurrentActivity] = useState<Activity | undefined>();
+  const [currentActivity, setCurrentActivity] = useState<Activity | undefined>(activity);
 
   // repopulate the inputs with existing activitiy's input
   // if it is being edited
@@ -81,6 +82,13 @@ useActivity(plan.plan_id);
     }
   }, [activity]);
 
+  useEffect(() => {
+  console.log(
+    "CURRENT ACTIVITY STATE CHANGED:",
+    currentActivity
+  );
+}, [currentActivity]);
+
 
   const handleError = (message: string) => {
     setFormError(message);
@@ -93,6 +101,9 @@ useActivity(plan.plan_id);
   };
 
   const handleSave = async () => {
+    console.log("========== SAVE ==========");
+    console.log("currentActivity:", currentActivity);
+    console.log("activity prop:", activity);
 
     if (!title.trim()) {
       handleError("Please Enter an Activity Title");
@@ -119,6 +130,12 @@ useActivity(plan.plan_id);
       return;
     }
 
+    // const timeValidation = validateTimeInterval(startTime, endTime, currentActivity.activity_id);
+
+    // if (timeValidation.isValid === false) {
+    //   handleError(timeValidation.message)
+    // }
+
     const activityData = {
       title: title,
       description: description,
@@ -130,13 +147,29 @@ useActivity(plan.plan_id);
 
     try {
       if (currentActivity) {
-        await updateActivity(currentActivity.plan_id, activityData);
+        console.log(
+          ">>> UPDATE",
+        currentActivity.activity_id
+        );
+
+
+        await updateActivity(currentActivity.activity_id, activityData);
       } else {
-        const createdActivity = await createActivity(activityData);
+        console.log(">>> CREATE");
+
+        const createdActivity: Activity = await createActivity(activityData);
+
+        console.log("createdActivity:", createdActivity);
 
         if (!createdActivity) {
+          console.log("!!! CREATE RETURNED NOTHING");
           return;
         }
+
+        console.log(
+        ">>> SETTING CURRENT ACTIVITY:",
+          createdActivity.activity_id
+        );
 
         setCurrentActivity(createdActivity);
         console.log("activity created");
@@ -152,7 +185,7 @@ useActivity(plan.plan_id);
     return;
     }
 
-    await deleteActivity(currentActivity.plan_id);
+    await deleteActivity(currentActivity.activity_id);
     onOpenChange(false); // close dialog
   };
 

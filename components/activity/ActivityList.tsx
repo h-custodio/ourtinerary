@@ -84,7 +84,7 @@ export function ActivityList({
   }
 
   return (
-    <div className="rounded-2xl border-2 border-gray-300 overflow-hidden">
+    <div className="rounded-2xl border-2 border-dashed border-gray-300 overflow-hidden">
       {/* Future timeline header */}
       <div className="border-b bg-muted/30 px-4 py-2">
         <p className="text-sm font-medium">

@@ -101,7 +101,7 @@ export default function HomePage() {
           <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
           <div className="w-3 h-3 rounded-full bg-green-400/80" />
         </div>
-        {/* Display a preview of plan-page/planForm  */}
+        {/* Display a preview of plans page's planForm  */}
         <img
           src="/plan-preview.png"
           alt="ourtinerary plan interface preview"

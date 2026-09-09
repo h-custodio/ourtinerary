@@ -56,7 +56,10 @@ export default function useActivity(planId: string) {
       .insert({
         ...activityData,
         plan_id: planId,
-      }) 
+      })
+      .select()
+      .single();
+
 
     if (activityError) {
       console.error("failed to insert activity: ", activityError);

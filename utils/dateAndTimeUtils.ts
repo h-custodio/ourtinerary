@@ -41,12 +41,12 @@ export const validateTimeInterval = (
   const newStart = timeToMinutes(startTime);
   const newEnd = timeToMinutes(endTime);
 
-  // must be within 00:00 - 23:59
+  // must be within 00:00 - 24:00
   if (
     newStart < 0 ||
-    newStart > 1439 || 
+    newStart > 1440 || 
     newEnd < 0 ||
-    newEnd > 1439
+    newEnd > 1440
   ) {
     return {
       isValid: false,
