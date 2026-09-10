@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-
-import useActivity from "@/hooks/useActivities";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -23,7 +20,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Activity, ActivityInsert, ActivityUpdate } from "@/types/activity";
+
+import { Activity} from "@/types/activity";
 import { Plan } from "@/types/plan";
 import { validateTimeInterval } from "@/utils/dateAndTimeUtils";
 
@@ -69,6 +67,9 @@ export default function ActivityDialog({
   const [formError, setFormError] = useState<string | null>(null);
   const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
 
+  // prevents multiple save/delete requests from being sent at the same time
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
   // repopulate the inputs with existing activitiy's input
   // if it is being edited
   useEffect(() => {
@@ -87,6 +88,8 @@ export default function ActivityDialog({
       setEndTime("");
       setLocation("");
     }
+
+    setIsSubmitting(false);
   }, [activity, open]);
 
   const handleError = (message: string) => {
@@ -100,6 +103,9 @@ export default function ActivityDialog({
   };
 
   const handleSave = async () => {
+    // prevent spamming the submit button while the request is in progress
+    if (isSubmitting) return;
+
     if (!title.trim()) {
       handleError("Please Enter an Activity Title");
       return;
@@ -146,6 +152,8 @@ export default function ActivityDialog({
       plan_id: plan.plan_id,
     };
 
+    setIsSubmitting(true);
+
     try {
       if (activity) {
         await updateActivity(activity.activity_id, activityData);
@@ -157,6 +165,9 @@ export default function ActivityDialog({
       onOpenChange(false);
     } catch (error) {
       console.error("Error saving activity:", error);
+      handleError("Failed to save activity");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -166,6 +177,11 @@ export default function ActivityDialog({
       return;
     }
 
+    // prevent multiple delete requests from being sent at the same time
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       await deleteActivity(activity.activity_id);
 
@@ -174,6 +190,8 @@ export default function ActivityDialog({
     } catch (error) {
       console.error("Error deleting activity:", error);
       handleError("Failed to delete activity");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -220,6 +238,7 @@ export default function ActivityDialog({
                 value={title}
                 placeholder="New Activity"
                 onChange={(e) => setTitle(e.target.value)}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -232,6 +251,7 @@ export default function ActivityDialog({
                 value={description}
                 placeholder="Activity Description"
                 onChange={(e) => setDescription(e.target.value)}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -245,6 +265,7 @@ export default function ActivityDialog({
                     type="time"
                     className="h-9 text-sm"
                     onChange={(e) => setStartTime(e.target.value)}
+                    disabled={isSubmitting}
                   />
                 </div>
 
@@ -260,6 +281,7 @@ export default function ActivityDialog({
                     type="time"
                     className="h-9 text-sm"
                     onChange={(e) => setEndTime(e.target.value)}
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -274,12 +296,15 @@ export default function ActivityDialog({
                 value={location}
                 placeholder="123 Main ST, Montreal, QC, H3Z 2Y7, Canada"
                 onChange={(e) => setLocation(e.target.value)}
+                disabled={isSubmitting}
               />
             </div>
 
             <div className="flex items-center justify-between">
               <div className="flex gap-1">
-                <Button type="submit">Submit</Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Saving..." : "Submit"}
+                </Button>
               </div>
 
               {activity && (
@@ -287,8 +312,9 @@ export default function ActivityDialog({
                   type="button"
                   variant="destructive"
                   onClick={handleDelete}
+                  disabled={isSubmitting}
                 >
-                  Delete
+                  {isSubmitting ? "Deleting..." : "Delete"}
                 </Button>
               )}
             </div>
