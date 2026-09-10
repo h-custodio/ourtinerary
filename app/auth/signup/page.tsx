@@ -11,6 +11,7 @@ import supabase from "@/lib/supabase/client"; // global variable from lib/supaba
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [message, setMessage] = useState("");
 
   async function handleSubmit(
@@ -26,6 +27,9 @@ export default function SignupPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {display_name: displayName }
+      }
     });
 
     // // signup handling validation
@@ -35,14 +39,14 @@ export default function SignupPage() {
       return;
     }
 
-    setMessage("Account created! Check your email to confirm your account.");
+    setMessage("Account created! Please log in.");
     console.log("Account created:", data.user);
   }
 
   return (
     <div className="w-full max-w-md my-12 mx-auto p-4 overflow-hidden">
       <div className="text-center mb-6">
-        <h1 className="text-4xl font-bold">Join ourtinerary!</h1>
+        <h1 className="text-4xl font-bold">Join Ourtinerary!</h1>
         <p className="text-lg text-muted-foreground">Create a free account.</p>
       </div>
 
@@ -57,6 +61,21 @@ export default function SignupPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="example@email.com"
+            className="py-2"
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="displayName" className="mb-1 text-muted-foreground block">
+            Display Name
+          </Label>
+          <Input
+            id="displayName"
+            type="text"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            placeholder="username"
             className="py-2"
             required
           />

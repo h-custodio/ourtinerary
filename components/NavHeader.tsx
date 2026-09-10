@@ -7,14 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 const NavHeader = async () => {
   const supabaseServer = await createClient();
 
-  const {
-    data: { user },
-    error,
-  } = await supabaseServer.auth.getUser();
-
-  if (error) {
-    console.error("Failed to get user:", error);
-  }
+  const { data: { user } } = await supabaseServer.auth.getUser();
 
   return (
     <div className="flex justify-between">

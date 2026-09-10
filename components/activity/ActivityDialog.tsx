@@ -152,7 +152,6 @@ useActivity(plan.plan_id);
         currentActivity.activity_id
         );
 
-
         await updateActivity(currentActivity.activity_id, activityData);
       } else {
         console.log(">>> CREATE");

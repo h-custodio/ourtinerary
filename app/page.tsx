@@ -35,30 +35,6 @@ export default function HomePage() {
 
       <div className="w-full border-t border-border" />
 
-      {/* <div className="flex justify-between w-full gap-10 my-16 text-start">
-          {[
-            {
-              title: "Discover",
-              desc: "Find unique activities available near you.",
-            },
-            {
-              title: "Gather",
-              desc: "Invite your friends with ease.",
-            },
-            {
-              title: "Plan",
-              desc: "Collaborate and coordinate your activities.",
-            },
-          ].map((item, index) => (
-            <div key={index} className="flex-1">
-              <h1 className="text-4xl font-bold">{item.title}</h1>
-              <p className="text-xl text-muted-foreground">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-
-      <div className="w-full border-t border-border" /> */}
-
       <div className="my-17 text-start">
         <h2 className="text-3xl font-bold text-center mb-12">How it works</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
