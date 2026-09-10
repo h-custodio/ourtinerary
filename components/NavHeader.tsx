@@ -17,7 +17,7 @@ const NavHeader = async () => {
         <img
           src="/logo.jpg"
           alt="ourtinerary logo"
-          style={{ maxHeight: "2.5rem", width: "auto" }}
+          className="max-h-10 w-auto"
         />
         <p className="text-3xl font-bold">OURTINERARY</p>
       </Link>
