@@ -45,9 +45,10 @@ type ActivityFormProps = {
 };
 
 // plan needs to be passed for primary key reference
-type Props = ActivityDialogProps & ActivityFormProps & {
-  plan: Plan;
-};
+type Props = ActivityDialogProps &
+  ActivityFormProps & {
+    plan: Plan;
+  };
 
 export default function ActivityDialog({
   plan,
@@ -87,7 +88,6 @@ export default function ActivityDialog({
       setLocation("");
     }
   }, [activity, open]);
-
 
   const handleError = (message: string) => {
     setFormError(message);
@@ -129,7 +129,7 @@ export default function ActivityDialog({
       activities,
       startTime,
       endTime,
-      activity?.activity_id
+      activity?.activity_id,
     );
 
     if (!timeValidation.isValid) {
@@ -147,23 +147,23 @@ export default function ActivityDialog({
     };
 
     try {
-        if (activity) {
-          await updateActivity(activity.activity_id, activityData);
-        } else {
-          await createActivity(activityData);
-        }
+      if (activity) {
+        await updateActivity(activity.activity_id, activityData);
+      } else {
+        await createActivity(activityData);
+      }
 
-        onActivitySaved();
-        onOpenChange(false);
-      } catch (error) {
-        console.error("Error saving activity:", error);
+      onActivitySaved();
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error saving activity:", error);
     }
   };
 
   const handleDelete = async () => {
     if (!activity) {
       setFormError("There is no activity to delete");
-    return;
+      return;
     }
 
     try {
@@ -173,7 +173,7 @@ export default function ActivityDialog({
       onOpenChange(false); // close dialog
     } catch (error) {
       console.error("Error deleting activity:", error);
-      handleError("Failed to delete activity")
+      handleError("Failed to delete activity");
     }
   };
 
@@ -205,11 +205,12 @@ export default function ActivityDialog({
           <DialogHeader>
             <DialogTitle>Enter Activity Details</DialogTitle>
           </DialogHeader>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            handleSave();
-          }}
-            >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSave();
+            }}
+          >
             <div className="mb-3">
               <Label htmlFor="title" className="mb-1">
                 Activity Title
@@ -278,13 +279,18 @@ export default function ActivityDialog({
 
             <div className="flex items-center justify-between">
               <div className="flex gap-1">
-
                 <Button type="submit">Submit</Button>
               </div>
 
-              <Button type="button" variant="destructive" onClick={handleDelete}>
-                Delete
-              </Button>
+              {activity && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Button>
+              )}
             </div>
           </form>
         </DialogContent>
