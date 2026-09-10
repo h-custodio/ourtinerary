@@ -2,23 +2,42 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { CalendarIcon } from "lucide-react";
 import { format, startOfToday, addYears } from "date-fns";
-import ActivityDialog from "@/components/activity/ActivityDialog"
+import ActivityDialog from "@/components/activity/ActivityDialog";
 import usePlans from "@/hooks/usePlans";
 import { Plan } from "@/types/plan";
 import { Activity } from "@/types/activity";
 import { ActivityList } from "../activity/ActivityList";
 import useActivity from "@/hooks/useActivities";
-
 
 // an optional parameter to be passed
 // used if a pre-existing plan is passed to be edited
@@ -29,8 +48,10 @@ type PlanFormProps = {
 export function PlanForm({ plan }: PlanFormProps) {
   // dialog/popup state
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>();
-  // component state 
+  const [selectedActivity, setSelectedActivity] = useState<
+    Activity | undefined
+  >();
+  // component state
   const { createPlan, updatePlan, deletePlan, error: planError } = usePlans();
   const [currentPlan, setCurrentPlan] = useState<Plan | undefined>(plan);
   const {
@@ -100,7 +121,7 @@ export function PlanForm({ plan }: PlanFormProps) {
       // if plan exists and is being updated
       if (currentPlan) {
         await updatePlan(currentPlan.plan_id, planData);
-      } else { 
+      } else {
         // if this is a new plan being created
         const createdPlan = await createPlan(planData);
 
@@ -138,160 +159,154 @@ export function PlanForm({ plan }: PlanFormProps) {
       {formError && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] rounded-md bg-red-500 px-4 py-3 text-sm text-white shadow-lg">
           {formError}
-      </div>
+        </div>
       )}
 
       <Card>
-        
-          <CardHeader>
-            <CardTitle>Plan Workspace</CardTitle>
-          </CardHeader>
+        <CardHeader>
+          <CardTitle>Plan Workspace</CardTitle>
+        </CardHeader>
 
-          {/*plan title input*/}
-          <CardContent>
-            <div className="flex items-center gap-3">
-              <Label htmlFor="plan-title">Plan Title</Label>
+        {/*plan title input*/}
+        <CardContent>
+          <div className="flex items-center gap-3">
+            <Label htmlFor="plan-title">Plan Title</Label>
 
+            <Input
+              id="plan-title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Summer Vacation"
+              className="h-9 border border-input w-[440px]"
+              required
+            />
+          </div>
+
+          {/*calendary input*/}
+          <div className="flex items-center gap-3">
+            <Label htmlFor="plan-date">Plan Date</Label>
+
+            <div className="relative w-[220px]">
               <Input
-                id="plan-title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Summer Vacation"
-                className="h-9 border border-input w-[440px]"
-                required
+                id="plan-date"
+                value={date ? format(date, "PPP") : ""}
+                placeholder="Select a date"
+                readOnly
+                className="h-9 pr-10 border border-input"
               />
-            </div>
 
-            {/*calendary input*/}
-            <div className="flex items-center gap-3">
-              <Label htmlFor="plan-date">Plan Date</Label>
-
-              <div className="relative w-[220px]">
-                <Input
-                  id="plan-date"
-                  value={date ? format(date, "PPP") : ""}
-                  placeholder="Select a date"
-                  readOnly
-                  className="h-9 pr-10 border border-input"
+              {/*Calendar menu*/}
+              <Popover>
+                <PopoverTrigger
+                  render={
+                    <button
+                      type="button"
+                      className="absolute right-0 top-0 flex h-9 w-9 items-center justify-center"
+                      aria-label="Select date"
+                    >
+                      <CalendarIcon className="h-4 w-4" />
+                    </button>
+                  }
                 />
 
-                {/*Calendar menu*/}
-                <Popover>
-                  <PopoverTrigger
-                    render={
-                      <button
-                        type="button"
-                        className="absolute right-0 top-0 flex h-9 w-9 items-center justify-center"
-                        aria-label="Select date"
-                      >
-                        <CalendarIcon className="h-4 w-4" />
-                      </button>
-                    }
+                {/*calendar icon*/}
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    disabled={{ before: startOfToday() }}
+                    captionLayout="dropdown"
+                    startMonth={startOfToday()}
+                    endMonth={addYears(startOfToday(), 20)}
                   />
-
-                  {/*calendar icon*/}
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      onSelect={setDate}
-                      disabled={{ before: startOfToday() }}
-                      captionLayout="dropdown"
-                      startMonth={startOfToday()}
-                      endMonth={addYears(startOfToday(), 20)}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              
+                </PopoverContent>
+              </Popover>
             </div>
-            
-            {/*plan description*/}
-            <div className="space-y-2">
-              <Label htmlFor="plan-description">Plan Description</Label>
+          </div>
 
-              <Textarea
-                id="plan-description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe your plan..."
-                className="min-h-24 resize-none"
-                required
-              />
-            </div>
+          {/*plan description*/}
+          <div className="space-y-2">
+            <Label htmlFor="plan-description">Plan Description</Label>
 
-          </CardContent>
-          
-          {/*buttons*/}
-          <CardFooter className="flex gap-4">
-            <Button onClick={() => {
-              if (!currentPlan) {
-                showError("Please save the plan before adding activities");
-                return;
-              }
-
-              setDialogOpen(true);
-              setSelectedActivity(undefined);
-              }} className="border">
-                Add Activity
-            </Button>
-
-            <Button className="border" onClick={handleSave}>
-              {currentPlan ? "Save Changes" : "Save Plan"}
-            </Button>
-
-            <AlertDialog>
-              <AlertDialogTrigger render={<Button className="border" />}>
-                Delete Plan
-              </AlertDialogTrigger>
-
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently delete this plan and its activities.
-                    This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete}>
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </CardFooter>
-
-          {/*activity popup*/}
-          {currentPlan  && <ActivityDialog 
-            plan={currentPlan} 
-            open={dialogOpen} 
-            onOpenChange={setDialogOpen} 
-            activity={selectedActivity} 
-            onActivitySaved={refetch} 
-            activities={activities} 
-            createActivity={createActivity} 
-            updateActivity={updateActivity} 
-            deleteActivity={deleteActivity} 
+            <Textarea
+              id="plan-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe your plan..."
+              className="min-h-24 resize-none"
+              required
             />
-          }
-        
-        {/*activity list*/}
-        {currentPlan && <ActivityList
-          plan={currentPlan}
-          activities={activities}
-          loading={loading}
-          error={error}
-          onActivityClick={handleActivityClick}
-          />
-        }
+          </div>
+        </CardContent>
 
+        {/*buttons*/}
+        <CardFooter className="flex gap-4">
+          {currentPlan && (
+            <Button
+              onClick={() => {
+                setDialogOpen(true);
+                setSelectedActivity(undefined);
+              }}
+              className="border"
+            >
+              Add Activity
+            </Button>
+          )}
+
+          <Button className="border" onClick={handleSave}>
+            {currentPlan ? "Save Changes" : "Save Plan"}
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger render={<Button className="border" />}>
+              Delete Plan
+            </AlertDialogTrigger>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete this plan and its activities.
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </CardFooter>
+
+        {/*activity popup*/}
+        {currentPlan && (
+          <ActivityDialog
+            plan={currentPlan}
+            open={dialogOpen}
+            onOpenChange={setDialogOpen}
+            activity={selectedActivity}
+            onActivitySaved={refetch}
+            activities={activities}
+            createActivity={createActivity}
+            updateActivity={updateActivity}
+            deleteActivity={deleteActivity}
+          />
+        )}
+
+        {/*activity list*/}
+        {currentPlan && (
+          <ActivityList
+            plan={currentPlan}
+            activities={activities}
+            loading={loading}
+            error={error}
+            onActivityClick={handleActivityClick}
+          />
+        )}
       </Card>
     </div>
   );
 }
-
-
-
