@@ -62,7 +62,7 @@ export function PlanForm({ plan }: PlanFormProps) {
     createActivity,
     updateActivity,
     deleteActivity,
-  } = useActivity(currentPlan?.plan_id ?? "");
+  } = useActivity(currentPlan?.plan_id ?? "temp");
   // user input state
   const [title, setTitle] = useState("");
   const [date, setDate] = useState<Date | undefined>();

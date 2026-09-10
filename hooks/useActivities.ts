@@ -12,6 +12,13 @@ export default function useActivity(planId: string) {
 
   // useCallback keeps same function reference in between renders
   const fetchActivities = useCallback(async () => {
+    if (!planId || planId === "temp") {
+      setActivities([]);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     setLoading(true); // resets to default on refetch
     setError(null);   // resets to default on refetch
 
