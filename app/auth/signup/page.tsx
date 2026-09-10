@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button, buttonVariants } from "@/components/ui/button";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import supabase from "@/lib/supabase/client"; // global variable from lib/supabase/client.ts
 
@@ -13,6 +16,25 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [message, setMessage] = useState("");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    async function checkUser() {
+      const { data: user, error: userError } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("Failed to get user:", userError);
+        return;
+      }
+
+      if (user) {
+        router.push("/account");
+      }
+    }
+
+    checkUser();
+  }, [router]);
 
   async function handleSubmit(
     e: React.SubmitEvent<HTMLFormElement>,
@@ -28,8 +50,8 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        data: {display_name: displayName }
-      }
+        data: { display_name: displayName },
+      },
     });
 
     // // signup handling validation
@@ -67,7 +89,10 @@ export default function SignupPage() {
         </div>
 
         <div>
-          <Label htmlFor="displayName" className="mb-1 text-muted-foreground block">
+          <Label
+            htmlFor="displayName"
+            className="mb-1 text-muted-foreground block"
+          >
             Display Name
           </Label>
           <Input

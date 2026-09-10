@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button, buttonVariants } from "@/components/ui/button";
+
 import Link from "next/link";
-import supabase from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+
+import supabase from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -14,6 +17,23 @@ export default function LoginPage() {
   const [message, setMessage] = useState("");
 
   const router = useRouter();
+
+  useEffect(() => {
+    async function checkUser() {
+      const { data: user, error: userError } = await supabase.auth.getUser();
+
+      if (userError) {
+        console.error("Failed to get user:", userError);
+        return;
+      }
+
+      if (user) {
+        router.push("/account");
+      }
+    }
+
+    checkUser();
+  }, [router]);
 
   async function handleSubmit(
     e: React.SubmitEvent<HTMLFormElement>,
