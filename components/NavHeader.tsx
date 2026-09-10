@@ -7,13 +7,22 @@ import { buttonVariants } from "@/components/ui/button";
 const NavHeader = async () => {
   const supabaseServer = await createClient();
 
-  const { data: { user } } = await supabaseServer.auth.getUser();
+  const {
+    data: { user },
+  } = await supabaseServer.auth.getUser();
 
   return (
     <div className="flex justify-between">
-      <Link href="/" className="text-3xl font-bold">
-        OURTINERARY
-      </Link>
+      <div className="flex items-center">
+        <img
+          src="/logo.jpg"
+          alt="ourtinerary logo"
+          style={{ maxHeight: "2.5rem", width: "auto" }}
+        />
+        <Link href="/" className="text-3xl font-bold">
+          OURTINERARY
+        </Link>
+      </div>
 
       <nav>
         {!user ? (
