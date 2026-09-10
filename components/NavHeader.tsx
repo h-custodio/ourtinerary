@@ -13,16 +13,14 @@ const NavHeader = async () => {
 
   return (
     <div className="flex justify-between">
-      <div className="flex items-center">
+      <Link href="/" className="flex items-center gap-2">
         <img
           src="/logo.jpg"
           alt="ourtinerary logo"
           style={{ maxHeight: "2.5rem", width: "auto" }}
         />
-        <Link href="/" className="text-3xl font-bold">
-          OURTINERARY
-        </Link>
-      </div>
+        <p className="text-3xl font-bold">OURTINERARY</p>
+      </Link>
 
       <nav>
         {!user ? (
