@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,15 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-
 import { CalendarIcon } from "lucide-react";
 import { format, startOfToday, addYears } from "date-fns";
-
 import ActivityDialog from "@/components/activity/ActivityDialog"
 import usePlans from "@/hooks/usePlans";
 import { Plan } from "@/types/plan";
 import { Activity } from "@/types/activity";
 import { ActivityList } from "../activity/ActivityList";
+import useActivity from "@/hooks/useActivities";
+
 
 // an optional parameter to be passed
 // used if a pre-existing plan is passed to be edited
@@ -31,9 +30,10 @@ export function PlanForm({ plan }: PlanFormProps) {
   // dialog/popup state
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>();
-  // plan 
+  // component state 
   const { createPlan, updatePlan, deletePlan, error: planError } = usePlans();
   const [currentPlan, setCurrentPlan] = useState<Plan | undefined>(plan);
+  const { activities, loading, error, refetch } = useActivity(currentPlan?.plan_id ?? "");
   // user input state
   const [title, setTitle] = useState("");
   const [date, setDate] = useState<Date | undefined>();
@@ -42,14 +42,6 @@ export function PlanForm({ plan }: PlanFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
 
   const router = useRouter();
-
-  useEffect(() => {
-  console.log("PlanForm mounted");
-  
-  return () => {
-    console.log("PlanForm UNMOUNTED");
-  };
-  }, []);
 
   // repopulate the inputs with existing plan's input
   // if it is being edited
@@ -128,12 +120,10 @@ export function PlanForm({ plan }: PlanFormProps) {
     router.push("/account"); // return to user account page
   };
 
-
   const handleActivityClick = (activity: Activity) => {
-  setSelectedActivity(activity);
-  setDialogOpen(true);
-};
-
+    setSelectedActivity(activity);
+    setDialogOpen(true);
+  };
 
   return (
     <div>
@@ -268,18 +258,22 @@ export function PlanForm({ plan }: PlanFormProps) {
 
           {/*activity popup*/}
           {currentPlan  && <ActivityDialog
-            plan={currentPlan }
+            plan={currentPlan}
             open={dialogOpen}
             onOpenChange={setDialogOpen}
-            activity={selectedActivity} 
+            activity={selectedActivity}
+            onActivitySaved={refetch}
           />
           }
         
         {/*activity list*/}
         {currentPlan && <ActivityList
           plan={currentPlan}
+          activities={activities}
+          loading={loading}
+          error={error}
           onActivityClick={handleActivityClick}
-        />
+          />
         }
 
       </Card>

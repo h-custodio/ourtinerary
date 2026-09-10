@@ -18,19 +18,19 @@ export const timeToMinutes = (time: string) => {
   const [hours, minutes] = time.split(":").map(Number);
   return hours * 60 + minutes;
 };
-
 enum TimeValidationMessage {
   TOO_SHORT = "Time interval is too short",
-  INVALID_START_END = "Starting time and ending time must be within 00:00 and 23:59",
+  INVALID_START_END =
+    "Starting time and ending time must be within 00:00 and 23:59",
   START_AFTER_EQUAL_END = "Starting time cannot be after ending time",
   OVERLAP = "Time interval overlaps with another",
   VALID = "Time interval is valid",
 }
 
 type TimeValidation = {
-  isValid: boolean,
+  isValid: boolean;
   message: TimeValidationMessage;
-}
+};
 
 export const validateTimeInterval = (
   activities: Activity[],
@@ -44,21 +44,21 @@ export const validateTimeInterval = (
   // must be within 00:00 - 24:00
   if (
     newStart < 0 ||
-    newStart > 1440 || 
+    newStart > 1440 ||
     newEnd < 0 ||
     newEnd > 1440
   ) {
     return {
       isValid: false,
-      message: TimeValidationMessage.INVALID_START_END
-    }
+      message: TimeValidationMessage.INVALID_START_END,
+    };
   }
 
   // starting time must be before end
   if (newStart >= newEnd) {
     return {
       isValid: false,
-      message: TimeValidationMessage.START_AFTER_EQUAL_END
+      message: TimeValidationMessage.START_AFTER_EQUAL_END,
     };
   }
 
@@ -66,7 +66,7 @@ export const validateTimeInterval = (
   if (newEnd - newStart < 15) {
     return {
       isValid: false,
-      message: TimeValidationMessage.TOO_SHORT
+      message: TimeValidationMessage.TOO_SHORT,
     };
   }
 
@@ -80,18 +80,18 @@ export const validateTimeInterval = (
     const existingEnd = timeToMinutes(activity.end_time);
 
     // Intervals overlap if they share any actual time
-    return newStart <= existingEnd && newEnd >= existingStart;
+    return newStart < existingEnd && newEnd > existingStart;
   });
 
   if (hasOverlap) {
     return {
       isValid: false,
-      message: TimeValidationMessage.OVERLAP
+      message: TimeValidationMessage.OVERLAP,
     };
   }
 
   return {
     isValid: true,
-    message: TimeValidationMessage.VALID
-  }
+    message: TimeValidationMessage.VALID,
+  };
 };

@@ -5,24 +5,23 @@ import { CalendarIcon } from "lucide-react";
 import { Activity } from "@/types/activity";
 import useActivity from "@/hooks/useActivities";
 import { Plan } from "@/types/plan";
+import { useEffect } from "react";
 
 type ActivityListProps = {
-  plan: Plan;
+  plan?: Plan;
+  activities: Activity[];
+  loading: boolean;
+  error: string | null;
   onActivityClick: (activity: Activity) => void;
 };
 
-
-
 export function ActivityList({
   plan,
+  activities,
+  loading,
+  error,
   onActivityClick,
 }: ActivityListProps) {
-  const {
-    activities,
-    loading,
-    error,
-  } = useActivity(plan.plan_id);
-
   // Plan hasn't been saved yet
   if (!plan) {
     return (

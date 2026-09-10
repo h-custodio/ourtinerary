@@ -31,6 +31,7 @@ import { validateTimeInterval } from "@/utils/dateAndTimeUtils";
 type ActivityDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onActivitySaved: () => void;
 };
 
 // an optional parameter to be passed
@@ -49,8 +50,9 @@ export default function ActivityDialog({
   open,
   onOpenChange,
   activity,
+  onActivitySaved,
 }: Props) {
-  const { error: activityError, loading, createActivity, updateActivity, deleteActivity } =
+  const { activities, error: activityError, createActivity, updateActivity, deleteActivity } =
 useActivity(plan.plan_id);
 
   const [title, setTitle] = useState("");
@@ -67,6 +69,8 @@ useActivity(plan.plan_id);
   // repopulate the inputs with existing activitiy's input
   // if it is being edited
   useEffect(() => {
+    setCurrentActivity(activity);
+
     if (activity) {
       setTitle(activity.title);
       setDescription(activity.description);
@@ -82,14 +86,6 @@ useActivity(plan.plan_id);
     }
   }, [activity]);
 
-  useEffect(() => {
-  console.log(
-    "CURRENT ACTIVITY STATE CHANGED:",
-    currentActivity
-  );
-}, [currentActivity]);
-
-
   const handleError = (message: string) => {
     setFormError(message);
     setIsErrorOpen(true);
@@ -101,10 +97,6 @@ useActivity(plan.plan_id);
   };
 
   const handleSave = async () => {
-    console.log("========== SAVE ==========");
-    console.log("currentActivity:", currentActivity);
-    console.log("activity prop:", activity);
-
     if (!title.trim()) {
       handleError("Please Enter an Activity Title");
       return;
@@ -130,11 +122,17 @@ useActivity(plan.plan_id);
       return;
     }
 
-    // const timeValidation = validateTimeInterval(startTime, endTime, currentActivity.activity_id);
+    const timeValidation = validateTimeInterval(
+      activities,
+      startTime,
+      endTime,
+      currentActivity?.activity_id
+    );
 
-    // if (timeValidation.isValid === false) {
-    //   handleError(timeValidation.message)
-    // }
+    if (!timeValidation.isValid) {
+      handleError(timeValidation.message);
+      return;
+    }
 
     const activityData = {
       title: title,
@@ -147,15 +145,8 @@ useActivity(plan.plan_id);
 
     try {
       if (currentActivity) {
-        console.log(
-          ">>> UPDATE",
-        currentActivity.activity_id
-        );
-
         await updateActivity(currentActivity.activity_id, activityData);
       } else {
-        console.log(">>> CREATE");
-
         const createdActivity: Activity = await createActivity(activityData);
 
         console.log("createdActivity:", createdActivity);
@@ -165,14 +156,11 @@ useActivity(plan.plan_id);
           return;
         }
 
-        console.log(
-        ">>> SETTING CURRENT ACTIVITY:",
-          createdActivity.activity_id
-        );
-
         setCurrentActivity(createdActivity);
-        console.log("activity created");
       }
+        onActivitySaved();
+        onOpenChange(false);
+        console.log("activity created");
     } catch {
       console.error("Error saving activity", activityError);
     }
@@ -185,6 +173,8 @@ useActivity(plan.plan_id);
     }
 
     await deleteActivity(currentActivity.activity_id);
+
+    onActivitySaved(); // refresh activity list
     onOpenChange(false); // close dialog
   };
 
@@ -192,7 +182,7 @@ useActivity(plan.plan_id);
     <div>
       <AlertDialog
         open={isErrorOpen}
-        onOpenChange={(open) => !open && handleCloseError}
+        onOpenChange={(open) => !open && handleCloseError()}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
