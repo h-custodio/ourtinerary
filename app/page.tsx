@@ -42,17 +42,17 @@ export default function HomePage() {
             {
               step: "01",
               title: "Create a Plan",
-              desc: "Set your dates, location, and activities.",
+              desc: "Set your dates, location, and key details.",
             },
             {
               step: "02",
-              title: "Invite your Friends",
-              desc: "Invite friends or family to your plans.",
+              title: "Add Activities",
+              desc: "Build out your itinerary with custom activities.",
             },
             {
               step: "03",
               title: "Lock in Plans",
-              desc: "Coordinate ideas and finalize your timeline with ease.",
+              desc: "Finalize your schedule and get ready to go!",
             },
           ].map((item) => (
             <div
