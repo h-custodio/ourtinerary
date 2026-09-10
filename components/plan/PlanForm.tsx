@@ -164,7 +164,9 @@ export function PlanForm({ plan }: PlanFormProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Plan Workspace</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            {!currentPlan ? "Make a New Plan" : "Edit Plan"}
+          </CardTitle>
         </CardHeader>
 
         {/*plan title input*/}
@@ -183,7 +185,7 @@ export function PlanForm({ plan }: PlanFormProps) {
           </div>
 
           {/*calendary input*/}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 my-5">
             <Label htmlFor="plan-date">Plan Date</Label>
 
             <div className="relative w-[220px]">
@@ -241,7 +243,7 @@ export function PlanForm({ plan }: PlanFormProps) {
         </CardContent>
 
         {/*buttons*/}
-        <CardFooter className="flex gap-4">
+        <CardFooter className="flex gap-2">
           {currentPlan && (
             <Button
               onClick={() => {
