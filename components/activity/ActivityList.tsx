@@ -95,39 +95,35 @@ export function ActivityList({
       <div className="max-h-[500px] overflow-y-auto p-4">
         <div className="flex flex-col gap-3">
 
-          {activities.map((activity) => (
-            <div
-              key={activity.activity_id}
-              onClick={() => onActivityClick(activity)}
-              className="w-full cursor-pointer rounded-xl border bg-background p-4 hover:bg-muted/50 transition-colors"
-            >
-              <div className="flex items-center justify-between">
+        {activities.map((activity) => (
+          <div
+            key={activity.activity_id}
+            onClick={() => onActivityClick(activity)}
+            className="w-full cursor-pointer rounded-xl border bg-background p-4 hover:bg-muted/50 transition-colors"
+          >
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-8 gap-y-2">
+              {/* Title */}
+              <h3 className="text-base font-semibold text-foreground text-left">
+                {activity.title}
+              </h3>
 
-                {/* Activity information */}
-                <div>
-                  <h3 className="text-sm font-medium">
-                    {activity.title}
-                  </h3>
+              {/* Start - End */}
+              <p className="text-sm font-medium text-foreground text-right whitespace-nowrap">
+                {activity.start_time} — {activity.end_time}
+              </p>
 
-                  <p className="text-xs text-muted-foreground">
-                    {activity.location}
-                  </p>
-                </div>
+              {/* Description */}
+              <p className="text-sm text-muted-foreground text-left leading-relaxed">
+                {activity.description}
+              </p>
 
-                {/* Time */}
-                <div className="text-right">
-                  <p className="text-sm">
-                    {activity.start_time}
-                  </p>
-
-                  <p className="text-xs text-muted-foreground">
-                    {activity.end_time}
-                  </p>
-                </div>
-
-              </div>
+              {/* Location */}
+              <p className="text-sm text-muted-foreground text-right whitespace-nowrap">
+                📍 {activity.location}
+              </p>
             </div>
-          ))}
+          </div>
+        ))}
 
         </div>
       </div>
