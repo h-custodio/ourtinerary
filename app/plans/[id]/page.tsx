@@ -1,5 +1,5 @@
-import { PlanForm }  from "@/components/plan/PlanForm";
-import  createClient  from "@/lib/supabase/server"; // Update to match your Supabase server client path
+import { PlanForm } from "@/components/plan/PlanForm";
+import createClient from "@/lib/supabase/server"; // Update to match your Supabase server client path
 import { notFound } from "next/navigation";
 
 type PageProps = {
@@ -23,8 +23,7 @@ export default async function EditPlanPage({ params }: PageProps) {
   }
 
   return (
-    <div className="flex-1 px-8 pb-12 pt-25 max-w-5xl mx-auto w-full text-center">
-      <h1 className="text-2xl font-bold mb-6">Edit Plan</h1>
+    <div className="flex-1 px-8 pb-12 pt-15 max-w-5xl mx-auto w-full text-center">
       <PlanForm plan={plan} />
     </div>
   );
