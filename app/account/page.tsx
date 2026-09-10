@@ -1,60 +1,29 @@
-import supabaseServer from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import LogoutButton from "../components/LogoutButton";
+
+import AccountHeader from "@/components/account/AccountHeader";
+import AccountPlans from "@/components/account/AccountPlans";
 
 export default async function AccountDashboard() {
+  // verify that user is authenticated
+  const supabaseServer = await createClient();
+  const { data: user, error } = await supabaseServer.auth.getUser();
 
-    // variable to be determined by api call
-    // deconstruct data to access user
-    const { data: {user}, error } = await supabaseServer.auth.getUser();
+  if (error) {
+    console.error("Failed to get user:", error);
+    return;
+  }
 
-    if (error) {
-        console.error("Failed to get user:", error);
-        return;
-    }
+  // No authenticated user
+  if (!user) {
+    console.log("user not authenticated, no access");
+    redirect("/auth/login");
+  }
 
-    // No authenticated user
-    if (!user) {
-        console.log("user not authenticated, no access");
-        redirect("/login");
-    }
-
-    return (
-        <div>
-            <h1>Welcome</h1>
-
-            <p>Logged in as: {user.email}</p>
-
-            <LogoutButton></LogoutButton>
-        </div>
-    );
+  return (
+    <div className="flex-1 px-8 py-12 max-w-4xl mx-auto w-full">
+      <AccountHeader />
+      <AccountPlans />
+    </div>
+  );
 }
-
-/*
-
-NEXT SESSION TODOS:
-
-DATABASE
-8) Connect Next.js → Supabase
-   - Set up a simple place/pattern for DB queries
-   - Learn + configure basic RLS
-   - Finish profile creation/retrieval
-
-FEATURES
-9) Build core "social" functionality
-   - Implement features one at a time
-   - Handle basic validation + errors
-
-QUALITY
-10) Pre-PR check
-   - Typecheck / lint / test / build
-   - Clean up obvious issues
-
-11) CI/CD
-   - Set up basic CI
-   - Deploy and verify production
-
-LATER
-12) Revisit architecture/ORM only if needed
-
-*/
