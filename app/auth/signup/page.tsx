@@ -125,7 +125,7 @@ export default function SignupPage() {
         </div>
 
         {message && (
-          <p className="text-sm text-center text-red-500">{message}</p>
+          <p className="text-sm text-center text-bg-red-500">{message}</p>
         )}
 
         <Button type="submit" className="w-full py-4 text-lg font-bold">
