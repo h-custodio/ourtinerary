@@ -23,7 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Activity } from "@/types/activity";
+import { Activity, ActivityInsert, ActivityUpdate } from "@/types/activity";
 import { Plan } from "@/types/plan";
 import { validateTimeInterval } from "@/utils/dateAndTimeUtils";
 
@@ -32,6 +32,10 @@ type ActivityDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onActivitySaved: () => void;
+  activities: Activity[];
+  createActivity: (data: any) => Promise<Activity>;
+  updateActivity: (id: string, data: any) => Promise<null | undefined>;
+  deleteActivity: (id: string) => Promise<null | undefined>;
 };
 
 // an optional parameter to be passed
@@ -51,25 +55,23 @@ export default function ActivityDialog({
   onOpenChange,
   activity,
   onActivitySaved,
+  activities,
+  createActivity,
+  updateActivity,
+  deleteActivity,
 }: Props) {
-  const { activities, error: activityError, createActivity, updateActivity, deleteActivity } =
-useActivity(plan.plan_id);
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [location, setLocation] = useState("");
-
   const [formError, setFormError] = useState<string | null>(null);
   const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
-
-  const [currentActivity, setCurrentActivity] = useState<Activity | undefined>(activity);
 
   // repopulate the inputs with existing activitiy's input
   // if it is being edited
   useEffect(() => {
-    setCurrentActivity(activity);
+    if (!open) return;
 
     if (activity) {
       setTitle(activity.title);
@@ -84,7 +86,8 @@ useActivity(plan.plan_id);
       setEndTime("");
       setLocation("");
     }
-  }, [activity]);
+  }, [activity, open]);
+
 
   const handleError = (message: string) => {
     setFormError(message);
@@ -126,7 +129,7 @@ useActivity(plan.plan_id);
       activities,
       startTime,
       endTime,
-      currentActivity?.activity_id
+      activity?.activity_id
     );
 
     if (!timeValidation.isValid) {
@@ -135,47 +138,43 @@ useActivity(plan.plan_id);
     }
 
     const activityData = {
-      title: title,
-      description: description,
+      title: title.trim(),
+      description: description.trim(),
       start_time: startTime,
       end_time: endTime,
-      location: location,
+      location: location.trim(),
       plan_id: plan.plan_id,
     };
 
     try {
-      if (currentActivity) {
-        await updateActivity(currentActivity.activity_id, activityData);
-      } else {
-        const createdActivity: Activity = await createActivity(activityData);
-
-        console.log("createdActivity:", createdActivity);
-
-        if (!createdActivity) {
-          console.log("!!! CREATE RETURNED NOTHING");
-          return;
+        if (activity) {
+          await updateActivity(activity.activity_id, activityData);
+        } else {
+          await createActivity(activityData);
         }
 
-        setCurrentActivity(createdActivity);
-      }
         onActivitySaved();
         onOpenChange(false);
-        console.log("activity created");
-    } catch {
-      console.error("Error saving activity", activityError);
+      } catch (error) {
+        console.error("Error saving activity:", error);
     }
   };
 
   const handleDelete = async () => {
-    if (!currentActivity) {
-      setFormError("Plan must be created first to be deleted");
+    if (!activity) {
+      setFormError("There is no activity to delete");
     return;
     }
 
-    await deleteActivity(currentActivity.activity_id);
+    try {
+      await deleteActivity(activity.activity_id);
 
-    onActivitySaved(); // refresh activity list
-    onOpenChange(false); // close dialog
+      onActivitySaved(); // refresh activity list
+      onOpenChange(false); // close dialog
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+      handleError("Failed to delete activity")
+    }
   };
 
   return (

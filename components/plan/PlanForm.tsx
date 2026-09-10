@@ -33,7 +33,15 @@ export function PlanForm({ plan }: PlanFormProps) {
   // component state 
   const { createPlan, updatePlan, deletePlan, error: planError } = usePlans();
   const [currentPlan, setCurrentPlan] = useState<Plan | undefined>(plan);
-  const { activities, loading, error, refetch } = useActivity(currentPlan?.plan_id ?? "");
+  const {
+    activities,
+    loading,
+    error,
+    refetch,
+    createActivity,
+    updateActivity,
+    deleteActivity,
+  } = useActivity(currentPlan?.plan_id ?? "");
   // user input state
   const [title, setTitle] = useState("");
   const [date, setDate] = useState<Date | undefined>();
@@ -257,13 +265,17 @@ export function PlanForm({ plan }: PlanFormProps) {
           </CardFooter>
 
           {/*activity popup*/}
-          {currentPlan  && <ActivityDialog
-            plan={currentPlan}
-            open={dialogOpen}
-            onOpenChange={setDialogOpen}
-            activity={selectedActivity}
-            onActivitySaved={refetch}
-          />
+          {currentPlan  && <ActivityDialog 
+            plan={currentPlan} 
+            open={dialogOpen} 
+            onOpenChange={setDialogOpen} 
+            activity={selectedActivity} 
+            onActivitySaved={refetch} 
+            activities={activities} 
+            createActivity={createActivity} 
+            updateActivity={updateActivity} 
+            deleteActivity={deleteActivity} 
+            />
           }
         
         {/*activity list*/}
