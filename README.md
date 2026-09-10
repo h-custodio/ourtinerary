@@ -2,7 +2,9 @@
 
 > **Think it. Plan it. Do it.**
 >
-> A collaborative itinerary planner that turns “we should totally do that” into an organized, actionable plan.
+> A collaborative trip-planning platform for organizing itineraries, activities, and travel plans in one place.
+
+### [View Live Demo →](https://ourtinerary.vercel.app/)
 
 Ourtinerary is a full-stack web application for creating and organizing shared plans with structured dates, activities, locations, and plan membership. It was built to explore practical full-stack development patterns including authentication, client/server rendering, relational data modeling, reusable React hooks, and database-level authorization with Supabase Row Level Security (RLS).
 
@@ -214,6 +216,10 @@ Ourtinerary is being developed iteratively. The next phase is focused on improvi
 ### Testing
 
 Introduce automated tests across the application, including unit tests for business logic and integration/end-to-end coverage for critical user flows such as authentication, plan creation, activity management, and permissions.
+
+### Improve UI Accessibility Across Device Dimensions
+
+Enhance the UI to provide a more accessible and responsive experience across different device dimensions, including phones, tablets, and desktop screens. Ensure layouts, navigation, controls, and content adapt appropriately to different screen sizes while maintaining usability and accessibility across devices.
 
 ### Developer Tooling
 
