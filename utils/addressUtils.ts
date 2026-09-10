@@ -1,4 +1,4 @@
-import { Address } from "@/component_types/address";
+import { Address } from "@/types/address";
 
 export const parseAddress = (address: string | null): Address | null => {
   if (address === null) {
