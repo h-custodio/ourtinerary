@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
+
 import {
   Card,
   CardHeader,
@@ -30,14 +32,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+
 import { CalendarIcon } from "lucide-react";
-import { format, startOfToday, addYears } from "date-fns";
-import ActivityDialog from "@/components/activity/ActivityDialog";
+import { format, startOfToday, addYears, parseISO } from "date-fns";
+
 import usePlans from "@/hooks/usePlans";
 import { Plan } from "@/types/plan";
+
+import useActivity from "@/hooks/useActivities";
 import { Activity } from "@/types/activity";
 import { ActivityList } from "../activity/ActivityList";
-import useActivity from "@/hooks/useActivities";
+import ActivityDialog from "@/components/activity/ActivityDialog";
 
 // an optional parameter to be passed
 // used if a pre-existing plan is passed to be edited
@@ -77,7 +82,7 @@ export function PlanForm({ plan }: PlanFormProps) {
   useEffect(() => {
     if (plan) {
       setTitle(plan.title);
-      setDate(new Date(plan.date));
+      setDate(parseISO(plan.date));
       setDescription(plan.description);
     } else {
       setTitle("");
@@ -113,7 +118,7 @@ export function PlanForm({ plan }: PlanFormProps) {
 
     const planData = {
       title: title.trim(),
-      date: date.toISOString(),
+      date: format(date, "yyyy-MM-dd"),
       description: description.trim(),
     };
 
@@ -260,9 +265,11 @@ export function PlanForm({ plan }: PlanFormProps) {
             {currentPlan ? "Save Changes" : "Save Plan"}
           </Button>
           <AlertDialog>
-            <AlertDialogTrigger render={<Button className="border" />}>
-              Delete Plan
-            </AlertDialogTrigger>
+            {currentPlan && (
+              <AlertDialogTrigger render={<Button className="border" />}>
+                Delete Plan
+              </AlertDialogTrigger>
+            )}
 
             <AlertDialogContent>
               <AlertDialogHeader>
